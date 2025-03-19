@@ -2,25 +2,29 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class SudokuBoard {
-    public static int[][] board = new int[9][9];
+    public int[][] board;
+    private SecureRandom secureRandom;
 
-    private static final Random random = new Random();
+    public SudokuBoard() {
+        secureRandom = new SecureRandom();
+        board = new int[9][9];
+    }
 
-    public static ArrayList<Integer> getRandomNumber() {
+    public ArrayList<Integer> getRandomNumber() {
 
         ArrayList<Integer> oneToNineNumbers = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
             oneToNineNumbers.add(i);
         }
 
-        Collections.shuffle(oneToNineNumbers, random);
+        Collections.shuffle(oneToNineNumbers, secureRandom);
         return oneToNineNumbers;
     }
 
-    public static void displayBoard() {
+    public void displayBoard() {
         System.out.print("\n_ _ _ _ _ _ _ _ _ _ _ _\n");
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -51,11 +55,11 @@ public class SudokuBoard {
 //            }
 //        }
 //    }
-    public static void fillBoard() {
+    public void fillBoard() {
         sudokuSolver(0, 0);
     }
 
-    public static boolean sudokuSolver(int row, int col) {
+    public boolean sudokuSolver(int row, int col) {
 
         if (row == 9) {
             return true;
@@ -67,10 +71,12 @@ public class SudokuBoard {
 
 
         ArrayList<Integer> oneToNineNumbers = getRandomNumber();
+
         for (int number : oneToNineNumbers) {
             if (isNumberValid(row, col, number)) {
 
                 board[row][col] = number;
+
                 if (sudokuSolver(row, col + 1)) {
 
                     return true;
@@ -202,7 +208,7 @@ public class SudokuBoard {
 //        return true;
 //    }
 
-    public static boolean isBoxValid(int row, int column, int numberToCheck) {
+    public boolean isBoxValid(int row, int column, int numberToCheck) {
 
         int startOfBoxRow = (row / 3) * 3;
         int startOfBoxColumn = (column / 3) * 3;
@@ -218,7 +224,7 @@ public class SudokuBoard {
         return true;
     }
 
-    public static boolean isRowValid(int row, int numberToCheck) {
+    public boolean isRowValid(int row, int numberToCheck) {
         for (int i = 0; i < 9; i++) {
 
             if (board[row][i] == numberToCheck) {
@@ -228,7 +234,7 @@ public class SudokuBoard {
         return true;
     }
 
-    public static boolean isColumnValid(int column, int numberToCheck) {
+    public boolean isColumnValid(int column, int numberToCheck) {
         for (int i = 0; i < 9; i++) {
 
             if (board[i][column] == numberToCheck) {
@@ -238,7 +244,7 @@ public class SudokuBoard {
         return true;
     }
 
-    public static boolean isNumberValid(int row, int column, int numberToCheck) {
+    public boolean isNumberValid(int row, int column, int numberToCheck) {
         return isRowValid(row, numberToCheck) &&
                 isColumnValid(column, numberToCheck) &&
                 isBoxValid(row, column, numberToCheck);
