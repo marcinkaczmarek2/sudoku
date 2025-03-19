@@ -6,11 +6,28 @@ import java.security.SecureRandom;
 
 public class SudokuBoard {
     public int[][] board;
-    private SecureRandom secureRandom;
+    private final SecureRandom secureRandom;
 
     public SudokuBoard() {
         secureRandom = new SecureRandom();
         board = new int[9][9];
+    }
+
+    public boolean areBoardsDifferent(int[][] board1, int[][] board2) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+
+                if (board1[i][j] != board2[i][j]) {
+
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int[][] getBoard() {
+        return board;
     }
 
     public ArrayList<Integer> getRandomNumber() {
@@ -73,7 +90,10 @@ public class SudokuBoard {
         ArrayList<Integer> oneToNineNumbers = getRandomNumber();
 
         for (int number : oneToNineNumbers) {
-            if (isNumberValid(row, col, number)) {
+            int currentRow = row;
+            int currentCol = col;
+
+            if (isNumberValid(row, col, number, currentCol, currentRow )) {
 
                 board[row][col] = number;
 
@@ -216,7 +236,7 @@ public class SudokuBoard {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
 
-                if (board[startOfBoxRow + i][startOfBoxColumn + j] == numberToCheck) {
+                if ((startOfBoxRow + i != row || startOfBoxColumn + j != column) && board[startOfBoxRow + i][startOfBoxColumn + j] == numberToCheck) {
                     return false;
                 }
             }
@@ -224,30 +244,29 @@ public class SudokuBoard {
         return true;
     }
 
-    public boolean isRowValid(int row, int numberToCheck) {
+    public boolean isRowValid(int row, int numberToCheck, int colToIgnore) {
         for (int i = 0; i < 9; i++) {
 
-            if (board[row][i] == numberToCheck) {
+            if (i != colToIgnore && board[row][i] == numberToCheck) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean isColumnValid(int column, int numberToCheck) {
+    public boolean isColumnValid(int column, int numberToCheck, int rowToIgnore) {
         for (int i = 0; i < 9; i++) {
 
-            if (board[i][column] == numberToCheck) {
+            if (i != rowToIgnore && board[i][column] == numberToCheck) {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean isNumberValid(int row, int column, int numberToCheck) {
-        return isRowValid(row, numberToCheck) &&
-                isColumnValid(column, numberToCheck) &&
+    public boolean isNumberValid(int row, int column, int numberToCheck, int colToIgnore, int rowToIgnore) {
+        return isRowValid(row, numberToCheck, colToIgnore) &&
+                isColumnValid(column, numberToCheck, rowToIgnore) &&
                 isBoxValid(row, column, numberToCheck);
     }
-
 }
