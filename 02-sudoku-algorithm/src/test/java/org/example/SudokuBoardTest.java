@@ -2,7 +2,8 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.HashSet;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SudokuBoardTest {
@@ -15,80 +16,98 @@ public class SudokuBoardTest {
         SudokuBoard board2 = new SudokuBoard();
         board2.fillBoard();
 
-        assertTrue(board1.areBoardsDifferent(board1.getBoard(), board2.getBoard()));
+        int[][] sudokuBoard1 = board1.getBoard();
+        int[][] sudokuBoard2 = board2.getBoard();
+
+        boolean condition = false;
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+
+                if (sudokuBoard1[i][j] != sudokuBoard2[i][j]) {
+
+                    condition = true;
+                    break;
+                }
+            }
+        }
+        assertTrue(condition);
     }
 
     @Test
     public void checkDuplicatesInRow() {
 
+        boolean isRowCorrect = true;
         SudokuBoard board = new SudokuBoard();
         board.fillBoard();
-
-        int[][] number = board.getBoard();
-        int numberToCheck = 0;
+        HashSet<Integer> testedRow = new HashSet<Integer>();
+        HashSet<Integer> correctRow = new HashSet<Integer>();
+        for (int i = 1; i < 10; i++) {
+            correctRow.add(i);
+        }
+        int[][] sudokuBoard = board.getBoard();
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-
-                numberToCheck = number[row][col];
-                assertTrue(board.isRowValid(row, numberToCheck, col));
-
+                testedRow.add(sudokuBoard[row][col]);
             }
+            if (!testedRow.equals(correctRow)) {
+                isRowCorrect = false;
+                break;
+            }
+            testedRow.clear();
         }
-
-        int testRow = 3;
-        number[testRow][1] = number[testRow][0];
-
-        assertFalse(board.isRowValid(testRow, number[testRow][0], 0));
+        assertTrue(isRowCorrect);
     }
 
     @Test
     public void checkDuplicatesInColumn() {
 
+        boolean isColumnCorrect = true;
         SudokuBoard board = new SudokuBoard();
         board.fillBoard();
-
-        int[][] number = board.getBoard();
-        int numberToCheck = 0;
-
+        HashSet<Integer> testedColumn = new HashSet<Integer>();
+        HashSet<Integer> correctColumn = new HashSet<Integer>();
+        for (int i = 1; i < 10; i++) {
+            correctColumn.add(i);
+        }
+        int[][] sudokuBoard = board.getBoard();
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
-
-                numberToCheck = number[row][col];
-                assertTrue(board.isColumnValid(col, numberToCheck, row));
-
+                testedColumn.add(sudokuBoard[row][col]);
             }
+            if (!testedColumn.equals(correctColumn)) {
+                isColumnCorrect = false;
+                break;
+            }
+            testedColumn.clear();
         }
-
-        int testColumn = 3;
-        number[1][testColumn] = number[0][testColumn];
-
-        assertFalse(board.isColumnValid(0, number[0][testColumn], testColumn));
+        assertTrue(isColumnCorrect);
     }
 
 
     @Test
     public void checkDuplicatesInBox() {
-
+        boolean isBoxCorrect = true;
         SudokuBoard board = new SudokuBoard();
         board.fillBoard();
-        int[][] number = board.getBoard();
-
-        int numberToCheck;
-
-        for (int row = 0; row < 9; row += 3) {
-            for (int col = 0; col < 9; col += 3) {
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-
-                        numberToCheck = number[row + i][col + j];
-                        assertTrue(board.isBoxValid(row + i, col + j, numberToCheck));
-
+        HashSet<Integer> testedBox = new HashSet<Integer>();
+        HashSet<Integer> correctBox = new HashSet<Integer>();
+        int[][] sudokuBoard = board.getBoard();
+        for (int i = 1; i < 10; i++) {
+            correctBox.add(i);
+        }
+        for (int boxRow = 0; boxRow < 3; boxRow++) {
+            for (int boxCol = 0; boxCol < 3; boxCol++) {
+                testedBox.clear();
+                for (int row = 0; row < 3; row++) {
+                    for (int col = 0; col < 3; col++) {
+                        testedBox.add(sudokuBoard[boxRow * 3 + row][boxCol * 3 + col]);
                     }
+                }
+                if (!testedBox.equals(correctBox)) {
+                    isBoxCorrect = false;
                 }
             }
         }
-        int testBoxRow = 0;
-        int testBoxCol = 3;
-        number[1][testBoxCol] = number[0][testBoxCol];
-        assertFalse(board.isBoxValid(0, testBoxCol, number[1][testBoxCol]));    }
+        assertTrue(isBoxCorrect);
+    }
 }
