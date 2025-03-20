@@ -13,8 +13,9 @@ public class SudokuBoard {
         board = new int[9][9];
     }
 
-    public int[][] getBoard() {
-        return board;
+    public int getCellNumber(int row, int col) {
+
+        return board[row][col];
     }
 
     private ArrayList<Integer> getRandomNumber() {
@@ -41,7 +42,6 @@ public class SudokuBoard {
         if (col == 9) {
             return sudokuSolver(row + 1, 0);
         }
-
 
         ArrayList<Integer> oneToNineNumbers = getRandomNumber();
 
@@ -80,6 +80,7 @@ public class SudokuBoard {
     }
 
     private boolean isRowValid(int row, int numberToCheck, int colToIgnore) {
+
         for (int col = 0; col < 9; col++) {
 
             if (col != colToIgnore && board[row][col] == numberToCheck) {

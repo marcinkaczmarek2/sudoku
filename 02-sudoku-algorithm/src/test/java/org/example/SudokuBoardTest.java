@@ -16,8 +16,16 @@ public class SudokuBoardTest {
         SudokuBoard board2 = new SudokuBoard();
         board2.fillBoard();
 
-        int[][] sudokuBoard1 = board1.getBoard();
-        int[][] sudokuBoard2 = board2.getBoard();
+        int[][] sudokuBoard1 = new int[9][9];
+        int[][] sudokuBoard2 = new int[9][9];
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+
+                sudokuBoard1[row][col] = board1.getCellNumber(row, col);
+                sudokuBoard2[row][col] = board2.getCellNumber(row, col);
+            }
+        }
 
         boolean condition = false;
         for (int i = 0; i < 9; i++) {
@@ -37,19 +45,33 @@ public class SudokuBoardTest {
     public void checkDuplicatesInRow() {
 
         boolean isRowCorrect = true;
+
         SudokuBoard board = new SudokuBoard();
         board.fillBoard();
-        HashSet<Integer> testedRow = new HashSet<Integer>();
-        HashSet<Integer> correctRow = new HashSet<Integer>();
+
+        HashSet<Integer> testedRow = new HashSet<>();
+        HashSet<Integer> correctRow = new HashSet<>();
+
         for (int i = 1; i < 10; i++) {
             correctRow.add(i);
         }
-        int[][] sudokuBoard = board.getBoard();
+
+        int[][] sudokuBoard = new int[9][9];
+
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
+
+                sudokuBoard[row][col] = board.getCellNumber(row, col);
+            }
+        }
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+
                 testedRow.add(sudokuBoard[row][col]);
             }
             if (!testedRow.equals(correctRow)) {
+
                 isRowCorrect = false;
                 break;
             }
@@ -64,12 +86,19 @@ public class SudokuBoardTest {
         boolean isColumnCorrect = true;
         SudokuBoard board = new SudokuBoard();
         board.fillBoard();
-        HashSet<Integer> testedColumn = new HashSet<Integer>();
-        HashSet<Integer> correctColumn = new HashSet<Integer>();
+        HashSet<Integer> testedColumn = new HashSet<>();
+        HashSet<Integer> correctColumn = new HashSet<>();
         for (int i = 1; i < 10; i++) {
             correctColumn.add(i);
         }
-        int[][] sudokuBoard = board.getBoard();
+        int[][] sudokuBoard = new int [9][9];
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                sudokuBoard[row][col] = board.getCellNumber(row, col);
+            }
+        }
+
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 testedColumn.add(sudokuBoard[row][col]);
@@ -86,24 +115,39 @@ public class SudokuBoardTest {
 
     @Test
     public void checkDuplicatesInBox() {
+
         boolean isBoxCorrect = true;
+
         SudokuBoard board = new SudokuBoard();
         board.fillBoard();
-        HashSet<Integer> testedBox = new HashSet<Integer>();
-        HashSet<Integer> correctBox = new HashSet<Integer>();
-        int[][] sudokuBoard = board.getBoard();
+
+        HashSet<Integer> testedBox = new HashSet<>();
+        HashSet<Integer> correctBox = new HashSet<>();
+
+        int[][] sudokuBoard = new int [9][9];
+
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                sudokuBoard[row][col] = board.getCellNumber(row, col);
+            }
+        }
+
         for (int i = 1; i < 10; i++) {
+
             correctBox.add(i);
         }
         for (int boxRow = 0; boxRow < 3; boxRow++) {
             for (int boxCol = 0; boxCol < 3; boxCol++) {
+
                 testedBox.clear();
                 for (int row = 0; row < 3; row++) {
                     for (int col = 0; col < 3; col++) {
+
                         testedBox.add(sudokuBoard[boxRow * 3 + row][boxCol * 3 + col]);
                     }
                 }
                 if (!testedBox.equals(correctBox)) {
+
                     isBoxCorrect = false;
                 }
             }
