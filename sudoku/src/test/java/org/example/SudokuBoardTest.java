@@ -11,10 +11,10 @@ public class SudokuBoardTest {
     public void areBoardsDifferent() {
 
         SudokuBoard board1 = new SudokuBoard();
-        board1.fillBoard();
+        board1.solveGame();
 
         SudokuBoard board2 = new SudokuBoard();
-        board2.fillBoard();
+        board2.solveGame();
 
         int[][] sudokuBoard1 = new int[9][9];
         int[][] sudokuBoard2 = new int[9][9];
@@ -47,7 +47,7 @@ public class SudokuBoardTest {
         boolean isRowCorrect = true;
 
         SudokuBoard board = new SudokuBoard();
-        board.fillBoard();
+        board.solveGame();
 
         HashSet<Integer> testedRow = new HashSet<>();
         HashSet<Integer> correctRow = new HashSet<>();
@@ -85,7 +85,7 @@ public class SudokuBoardTest {
 
         boolean isColumnCorrect = true;
         SudokuBoard board = new SudokuBoard();
-        board.fillBoard();
+        board.solveGame();
         HashSet<Integer> testedColumn = new HashSet<>();
         HashSet<Integer> correctColumn = new HashSet<>();
         for (int i = 1; i < 10; i++) {
@@ -119,7 +119,7 @@ public class SudokuBoardTest {
         boolean isBoxCorrect = true;
 
         SudokuBoard board = new SudokuBoard();
-        board.fillBoard();
+        board.solveGame();
 
         HashSet<Integer> testedBox = new HashSet<>();
         HashSet<Integer> correctBox = new HashSet<>();
