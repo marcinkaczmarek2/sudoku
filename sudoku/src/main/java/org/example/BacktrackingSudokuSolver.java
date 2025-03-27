@@ -12,13 +12,17 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         secureRandom = new SecureRandom();
     }
 
-    private ArrayList<Integer> getRandomNumber() {
+    private static final ArrayList<Integer> oneToNineNumbers = createList();
 
-        ArrayList<Integer> oneToNineNumbers = new ArrayList<>();
+    private static ArrayList<Integer> createList() {
+        ArrayList<Integer> numbers = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
-            oneToNineNumbers.add(i);
+            numbers.add(i);
         }
+        return numbers;
+    }
 
+    private ArrayList<Integer> getRandomNumber() {
         Collections.shuffle(oneToNineNumbers, secureRandom);
         return oneToNineNumbers;
     }
