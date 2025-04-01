@@ -24,8 +24,8 @@ public class SudokuBoardTest {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
 
-                sudokuBoard1[row][col] = board1.getCellNumber(row, col);
-                sudokuBoard2[row][col] = board2.getCellNumber(row, col);
+                sudokuBoard1[row][col] = board1.get(row, col);
+                sudokuBoard2[row][col] = board2.get(row, col);
             }
         }
 
@@ -64,7 +64,7 @@ public class SudokuBoardTest {
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
 
-                sudokuBoard[row][col] = board.getCellNumber(row, col);
+                sudokuBoard[row][col] = board.get(row, col);
             }
         }
 
@@ -99,7 +99,7 @@ public class SudokuBoardTest {
 
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                sudokuBoard[row][col] = board.getCellNumber(row, col);
+                sudokuBoard[row][col] = board.get(row, col);
             }
         }
 
@@ -133,7 +133,7 @@ public class SudokuBoardTest {
 
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
-                sudokuBoard[row][col] = board.getCellNumber(row, col);
+                sudokuBoard[row][col] = board.get(row, col);
             }
         }
 
