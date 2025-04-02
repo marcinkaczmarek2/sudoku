@@ -36,7 +36,8 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
             for (int j = 0; j < 3; j++) {
 
                 if (startOfBoxRow + i != row && startOfBoxColumn + j != column
-                        && sudokuBoard.board[startOfBoxRow + i][startOfBoxColumn + j].getFieldValue() == numberToCheck) {
+                        && sudokuBoard.board[startOfBoxRow + i][startOfBoxColumn + j].getFieldValue()
+                            == numberToCheck) {
                     return false;
                 }
             }

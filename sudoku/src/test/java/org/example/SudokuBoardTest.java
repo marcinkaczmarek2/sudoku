@@ -159,4 +159,14 @@ public class SudokuBoardTest {
         }
         assertTrue(isBoxCorrect);
     }
+
+//    @Test
+//    public void checkBoardCorrectness() {
+//
+//        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
+//        SudokuBoard board = new SudokuBoard(solver);
+//        board.solveGame();
+//
+//        assertTrue(board.checkBoard());
+//    }
 }

@@ -32,9 +32,15 @@ public class SudokuBoard {
     public boolean checkBoard() {
         boolean boardCorrectness = true;
         for (int i = 0; i < 9; i++) {
-            if (!getRow(i).verify()) boardCorrectness = false;
-            if (!getColumn(i).verify()) boardCorrectness = false;
-            if (!getBox(i).verify()) boardCorrectness = false;
+            if (!getRow(i).verify()) {
+                boardCorrectness = false;
+            }
+            if (!getColumn(i).verify()) {
+                boardCorrectness = false;
+            }
+            if (!getBox(i).verify()) {
+                boardCorrectness = false;
+            }
         }
         return boardCorrectness;
     }
