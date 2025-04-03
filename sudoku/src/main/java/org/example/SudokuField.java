@@ -1,13 +1,28 @@
 package org.example;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 public class SudokuField {
-    private int value;
+    private int fieldValue;
+
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     public int getFieldValue() {
-        return value;
+        return fieldValue;
     }
 
     public void setFieldValue(int value) {
-        this.value = value;
+        int oldValue = fieldValue;
+        this.fieldValue = value;
+        support.firePropertyChange("fieldValue", oldValue, value);
+    }
+
+    public void addFieldValueListener(PropertyChangeListener listener) {
+        this.support.addPropertyChangeListener(listener);
+    }
+
+    public void removeFieldValueListener(PropertyChangeListener listener) {
+        this.support.removePropertyChangeListener(listener);
     }
 }

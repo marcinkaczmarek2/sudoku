@@ -5,7 +5,6 @@ public class SudokuBoard {
     public final SudokuField[][] board;
     private final SudokuSolver solver;
 
-
     public SudokuBoard(SudokuSolver solver) {
         board = new SudokuField[BOARD_SIZE][BOARD_SIZE];
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -15,7 +14,6 @@ public class SudokuBoard {
         }
         this.solver = solver;
     }
-
 
     public void solveGame() {
         solver.solve(this);
@@ -45,7 +43,7 @@ public class SudokuBoard {
         return boardCorrectness;
     }
 
-    private SudokuRow getRow(int y) {
+    public SudokuRow getRow(int y) {
         SudokuRow sudokuRow = new SudokuRow();
         for (int i = 0; i < 9; i++) {
             sudokuRow.fields[i].setFieldValue(board[y][i].getFieldValue());
@@ -53,7 +51,7 @@ public class SudokuBoard {
         return sudokuRow;
     }
 
-    private SudokuColumn getColumn(int x) {
+    public SudokuColumn getColumn(int x) {
         SudokuColumn sudokuColumn = new SudokuColumn();
         for (int i = 0; i < 9; i++) {
             sudokuColumn.fields[i].setFieldValue(board[i][x].getFieldValue());
@@ -61,7 +59,7 @@ public class SudokuBoard {
         return sudokuColumn;
     }
 
-    private SudokuBox getBox(int x) {
+    public SudokuBox getBox(int x) {
         SudokuBox sudokuBox = new SudokuBox();
         int startRow = (x / 3) * 3;
         int startCol = (x % 3) * 3;
