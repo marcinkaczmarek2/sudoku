@@ -6,31 +6,29 @@ import java.beans.PropertyChangeListener;
 public class SudokuVerifier implements PropertyChangeListener {
 
     private final SudokuBoard board;
-    private final int row;
-    private final int col;
+    private final int rowIndex;
+    private final int colIndex;
     private final boolean liveVerification;
 
-    public SudokuVerifier(SudokuBoard board, int row, int col, boolean liveVerification) {
+    public SudokuVerifier(SudokuBoard board, int rowIndex, int colIndex, boolean liveVerification) {
         this.board = board;
-        this.row = row;
-        this.col = col;
+        this.rowIndex = rowIndex;
+        this.colIndex = colIndex;
         this.liveVerification = liveVerification;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (!liveVerification) {
-            return;
+        if (liveVerification) {
+            System.out.println("Verifying [" + rowIndex + "] [" + colIndex + "] due to value change.");
+            boolean rowValid = board.getRow(rowIndex).verify();
+            boolean colValid = board.getColumn(colIndex).verify();
+            boolean boxValid = board.getBox(rowIndex / 3 * 3 + colIndex / 3).verify();
+
+            System.out.println("Row valid: " + rowValid);
+            System.out.println("Column valid: " + colValid);
+            System.out.println("Box valid: " + boxValid);
         }
-
-        System.out.println("Verifying [" + row + "] [" + col + "] due to value change.");
-        boolean rowValid = board.getRow(row).verify();
-        boolean colValid = board.getColumn(col).verify();
-        boolean boxValid = board.getBox(row / 3 * 3 + col / 3).verify();
-
-        System.out.println("Row valid: " + rowValid);
-        System.out.println("Column valid: " + colValid);
-        System.out.println("Box valid: " + boxValid);
     }
 }
 

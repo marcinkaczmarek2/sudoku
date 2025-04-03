@@ -12,7 +12,7 @@ public abstract class SudokuUnit {
         }
     }
 
-    public boolean verify() {
+    protected boolean verify() {
         HashSet<Integer> checkUnit = new HashSet<>();
         HashSet<Integer> correctUnit = new HashSet<>();
         for (SudokuField field : fields) {

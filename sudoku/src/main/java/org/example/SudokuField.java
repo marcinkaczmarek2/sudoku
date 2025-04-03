@@ -6,7 +6,7 @@ import java.beans.PropertyChangeSupport;
 public class SudokuField {
     private int fieldValue;
 
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     public int getFieldValue() {
         return fieldValue;

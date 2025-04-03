@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SudokuVerifierTest {
 
     @Test
-    void testPropertyChange_skipsWhenLiveVerificationFalse() {
+    public void testPropertyChange_skipsWhenLiveVerificationFalse() {
         SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
         SudokuVerifier verifier = new SudokuVerifier(board, 0, 0, false);
 
@@ -18,7 +18,7 @@ public class SudokuVerifierTest {
     }
 
     @Test
-    void testPropertyChange_runsWhenLiveVerificationTrue() {
+    public void testPropertyChange_runsWhenLiveVerificationTrue() {
         SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
         board.solveGame();
         SudokuVerifier verifier = new SudokuVerifier(board, 0, 0, true);
