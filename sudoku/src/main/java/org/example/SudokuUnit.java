@@ -3,10 +3,13 @@ package org.example;
 import java.util.HashSet;
 
 public abstract class SudokuUnit {
-    private SudokuField[] fields;
+    protected SudokuField[] fields;
 
     public SudokuUnit() {
         this.fields = new SudokuField[SudokuBoard.BOARD_SIZE];
+        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+            fields[i] = new SudokuField();
+        }
     }
 
     public boolean verify() {

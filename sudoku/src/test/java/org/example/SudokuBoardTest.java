@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SudokuBoardTest {
@@ -160,13 +161,25 @@ public class SudokuBoardTest {
         assertTrue(isBoxCorrect);
     }
 
-//    @Test
-//    public void checkBoardCorrectness() {
-//
-//        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
-//        SudokuBoard board = new SudokuBoard(solver);
-//        board.solveGame();
-//
-//        assertTrue(board.checkBoard());
-//    }
+    @Test
+    public void checkBoardWhenCorrect() {
+
+        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+        board.solveGame();
+
+
+        assertTrue(board.checkBoard());
+    }
+
+    @Test
+    public void checkBoardWhenIncorrect() {
+
+        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+        board.solveGame();
+        board.set(0, 0, 0);
+
+        assertFalse(board.checkBoard());
+    }
 }
