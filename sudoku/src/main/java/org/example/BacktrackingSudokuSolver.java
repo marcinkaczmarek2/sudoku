@@ -36,7 +36,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
             for (int j = 0; j < 3; j++) {
 
                 if (startOfBoxRow + i != row && startOfBoxColumn + j != column
-                        && sudokuBoard.board[startOfBoxRow + i][startOfBoxColumn + j].getFieldValue()
+                        && sudokuBoard.board.get(startOfBoxRow + i).get(startOfBoxColumn + j).getFieldValue()
                             == numberToCheck) {
                     return false;
                 }
@@ -49,7 +49,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
 
         for (int col = 0; col < 9; col++) {
 
-            if (col != colToIgnore && sudokuBoard.board[row][col].getFieldValue() == numberToCheck) {
+            if (col != colToIgnore && sudokuBoard.board.get(row).get(col).getFieldValue() == numberToCheck) {
                 return false;
             }
         }
@@ -59,7 +59,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     private boolean isColumnValid(SudokuBoard sudokuBoard, int column, int numberToCheck, int rowToIgnore) {
         for (int row = 0; row < 9; row++) {
 
-            if (row != rowToIgnore && sudokuBoard.board[row][column].getFieldValue() == numberToCheck) {
+            if (row != rowToIgnore && sudokuBoard.board.get(row).get(column).getFieldValue() == numberToCheck) {
                 return false;
             }
         }
@@ -93,13 +93,13 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
 
             if (isNumberValid(sudokuBoard, row, col, number)) {
 
-                sudokuBoard.board[row][col].setFieldValue(number);
+                sudokuBoard.board.get(row).get(col).setFieldValue(number);
 
                 if (solveRecursively(sudokuBoard, row, col + 1)) {
 
                     return true;
                 }
-                sudokuBoard.board[row][col].setFieldValue(0);
+                sudokuBoard.board.get(row).get(col).setFieldValue(0);
             }
         }
         return false;

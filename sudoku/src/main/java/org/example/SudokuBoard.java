@@ -1,16 +1,37 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SudokuBoard {
     public static final int BOARD_SIZE = 9;
-    public final SudokuField[][] board;
+
+//    public final SudokuField[][] board;
+
+public final List<List<SudokuField>> board;
     private final SudokuSolver solver;
 
+//
+//    public SudokuBoard(SudokuSolver solver) {
+//        board = new SudokuField[BOARD_SIZE][BOARD_SIZE];
+//        for (int i = 0; i < BOARD_SIZE; i++) {
+//            for (int j = 0; j < BOARD_SIZE; j++) {
+//                board[i][j] = new SudokuField();
+//            }
+//        }
+//        this.solver = solver;
+//    }
+
     public SudokuBoard(SudokuSolver solver) {
-        board = new SudokuField[BOARD_SIZE][BOARD_SIZE];
+
+        board = new ArrayList<>();
         for (int i = 0; i < BOARD_SIZE; i++) {
+            List<SudokuField> row = new ArrayList<>();
             for (int j = 0; j < BOARD_SIZE; j++) {
-                board[i][j] = new SudokuField();
+
+                row.add(new SudokuField());
             }
+            board.add(row);
         }
         this.solver = solver;
     }
@@ -20,11 +41,11 @@ public class SudokuBoard {
     }
 
     public int get(int x, int y) {
-        return board[x][y].getFieldValue();
+        return board.get(x).get(y).getFieldValue();
     }
 
     public void set(int x, int y, int value) {
-        board[x][y].setFieldValue(value);
+        board.get(x).get(y).setFieldValue(value);
     }
 
     public boolean checkBoard() {
@@ -46,7 +67,7 @@ public class SudokuBoard {
     public SudokuRow getRow(int y) {
         SudokuRow sudokuRow = new SudokuRow();
         for (int i = 0; i < 9; i++) {
-            sudokuRow.fields[i].setFieldValue(board[y][i].getFieldValue());
+            sudokuRow.fields[i].setFieldValue(board.get(y).get(i).getFieldValue());
         }
         return sudokuRow;
     }
@@ -54,7 +75,7 @@ public class SudokuBoard {
     public SudokuColumn getColumn(int x) {
         SudokuColumn sudokuColumn = new SudokuColumn();
         for (int i = 0; i < 9; i++) {
-            sudokuColumn.fields[i].setFieldValue(board[i][x].getFieldValue());
+            sudokuColumn.fields[i].setFieldValue(board.get(i).get(x).getFieldValue());
         }
         return sudokuColumn;
     }
@@ -66,7 +87,7 @@ public class SudokuBoard {
         int index = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                sudokuBox.fields[index++].setFieldValue(board[startRow + i][startCol + j].getFieldValue());
+                sudokuBox.fields[index++].setFieldValue(board.get(startRow + i).get(startCol + j).getFieldValue());
             }
         }
         return sudokuBox;
