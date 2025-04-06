@@ -36,8 +36,8 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
             for (int j = 0; j < 3; j++) {
 
                 if (startOfBoxRow + i != row && startOfBoxColumn + j != column
-                        && sudokuBoard.board.get(startOfBoxRow + i).get(startOfBoxColumn + j).getFieldValue()
-                            == numberToCheck) {
+                        && sudokuBoard.board.get((startOfBoxRow + i) * 9 + startOfBoxColumn + j).getFieldValue()
+                        == numberToCheck) {
                     return false;
                 }
             }
@@ -47,9 +47,9 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
 
     private boolean isRowValid(SudokuBoard sudokuBoard, int row, int numberToCheck, int colToIgnore) {
 
-        for (int col = 0; col < 9; col++) {
+        for (int column = 0; column < 9; column++) {
 
-            if (col != colToIgnore && sudokuBoard.board.get(row).get(col).getFieldValue() == numberToCheck) {
+            if (column != colToIgnore && sudokuBoard.board.get(row * 9 + column).getFieldValue() == numberToCheck) {
                 return false;
             }
         }
@@ -59,7 +59,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     private boolean isColumnValid(SudokuBoard sudokuBoard, int column, int numberToCheck, int rowToIgnore) {
         for (int row = 0; row < 9; row++) {
 
-            if (row != rowToIgnore && sudokuBoard.board.get(row).get(column).getFieldValue() == numberToCheck) {
+            if (row != rowToIgnore && sudokuBoard.board.get(row * 9 + column).getFieldValue() == numberToCheck) {
                 return false;
             }
         }
@@ -93,13 +93,13 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
 
             if (isNumberValid(sudokuBoard, row, col, number)) {
 
-                sudokuBoard.board.get(row).get(col).setFieldValue(number);
+                sudokuBoard.board.get(row * 9 + col).setFieldValue(number);
 
                 if (solveRecursively(sudokuBoard, row, col + 1)) {
 
                     return true;
                 }
-                sudokuBoard.board.get(row).get(col).setFieldValue(0);
+                sudokuBoard.board.get(row * 9 + col).setFieldValue(0);
             }
         }
         return false;
