@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +75,40 @@ public class SudokuBoard {
             }
         }
         return sudokuBox;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            if (i % 3 == 0 && i != 0) {
+                stringBuilder.append("-".repeat(23));
+                stringBuilder.append("\n");
+            }
+
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                if (j % 3 == 0 && j != 0) {
+                    stringBuilder.append(" | ");
+                }
+
+                int value = get(j, i);
+                stringBuilder.append(value == 0 ? "." : value + " ");
+            }
+
+            stringBuilder.append("\n");
+        }
+
+        return stringBuilder.toString();
     }
 }
 

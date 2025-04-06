@@ -2,11 +2,11 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import java.beans.PropertyChangeListener;
 import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SudokuBoardTest {
@@ -186,22 +186,115 @@ public class SudokuBoardTest {
     }
 
     @Test
-    public void checkSudokuVerifierChange() {
-        SudokuField field = new SudokuField();
-        AtomicBoolean verified = new AtomicBoolean(false);
+    public void toStringFormat() {
+        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+        board.solveGame();
 
-        PropertyChangeListener listener = evt -> verified.set(true);
+        String output = board.toString();
 
-        field.addFieldValueListener(listener);
-        field.setFieldValue(2);
+        String[] lines = output.split("\n");
+        assertEquals(11, lines.length);
 
-        assertTrue(verified.get());
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i].trim();
 
-        verified.set(false);
+            if (line.isEmpty()) {
+                continue;
+            }
 
-        field.removeFieldValueListener(listener);
-        field.setFieldValue(6);
+            String[] values = line.split(" ");
 
-        assertFalse(verified.get());
+            if (i % 4 == 3) {
+                assertEquals("-----------------------", line);
+            } else {
+                assertEquals(13, values.length);
+            }
+        }
+    }
+
+    @Test
+    public void toStringEmptyBoard() {
+        String expectedOutput =
+                          "... | ... | ...\n"
+                        + "... | ... | ...\n"
+                        + "... | ... | ...\n"
+                        + "-----------------------\n"
+                        + "... | ... | ...\n"
+                        + "... | ... | ...\n"
+                        + "... | ... | ...\n"
+                        + "-----------------------\n"
+                        + "... | ... | ...\n"
+                        + "... | ... | ...\n"
+                        + "... | ... | ...\n";
+
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                board.set(i, j, 0);
+            }
+        }
+        assertEquals(expectedOutput, board.toString());
+    }
+
+    @Test
+    public void equalsCorrectnessTrue() {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard boardExpected = new SudokuBoard(solver);
+        SudokuBoard boardActual = new SudokuBoard(solver);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                boardExpected.set(i, j, 0);
+                boardActual.set(i, j, 0);
+            }
+        }
+        assertTrue(boardExpected.equals(boardActual));
+    }
+
+    @Test
+    public void equalsCorrectnessFalse() {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard boardExpected = new SudokuBoard(solver);
+        SudokuBoard boardActual = new SudokuBoard(solver);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                boardExpected.set(i, j, 0);
+                boardActual.set(i, j, 0);
+            }
+        }
+        boardActual.set(0, 0, 1);
+        assertFalse(boardExpected.equals(boardActual));
+    }
+
+    @Test
+    public void hashCodeCorrectnessTrue() {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard boardExpected = new SudokuBoard(solver);
+        SudokuBoard boardActual = new SudokuBoard(solver);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                boardExpected.set(i, j, 0);
+                boardActual.set(i, j, 0);
+            }
+        }
+        assertEquals(boardExpected.hashCode(), boardActual.hashCode());
+        assertTrue(boardExpected.equals(boardActual));
+    }
+
+    @Test
+    public void hashCodeCorrectnessFalse() {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard boardExpected = new SudokuBoard(solver);
+        SudokuBoard boardActual = new SudokuBoard(solver);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                boardExpected.set(i, j, 0);
+                boardActual.set(i, j, 0);
+            }
+        }
+        boardActual.set(0, 0, 1);
+        assertNotEquals(boardExpected.hashCode(), boardActual.hashCode());
+        assertFalse(boardExpected.equals(boardActual));
     }
 }
