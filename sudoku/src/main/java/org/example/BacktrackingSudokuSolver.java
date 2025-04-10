@@ -23,8 +23,9 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     }
 
     private ArrayList<Integer> getRandomNumber() {
-        Collections.shuffle(oneToNineNumbers, secureRandom);
-        return oneToNineNumbers;
+        ArrayList<Integer> shuffledList = new ArrayList<>(oneToNineNumbers);
+        Collections.shuffle(shuffledList, secureRandom);
+        return shuffledList;
     }
 
     private boolean isBoxValid(SudokuBoard sudokuBoard, int row, int column, int numberToCheck) {
