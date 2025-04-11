@@ -3,7 +3,7 @@ package org.example;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SudokuBoard {
@@ -13,10 +13,11 @@ public class SudokuBoard {
 
     public SudokuBoard(SudokuSolver solver) {
 
-        board = new ArrayList<>();
-        for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
-            board.add(new SudokuField());
+        SudokuField[] fields = new SudokuField[BOARD_SIZE * BOARD_SIZE];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = new SudokuField();
         }
+        board = Arrays.asList(fields);
         this.solver = solver;
     }
 
