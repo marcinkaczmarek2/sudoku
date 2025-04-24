@@ -3,13 +3,14 @@ package org.example;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class SudokuBoard {
+public class SudokuBoard implements Serializable {
     public static final int BOARD_SIZE = 9;
     protected final List<SudokuField> board;
-    private final SudokuSolver solver;
+    private final transient SudokuSolver solver;
 
     public SudokuBoard(SudokuSolver solver) {
 
@@ -103,7 +104,7 @@ public class SudokuBoard {
                 }
 
                 int value = get(j, i);
-                stringBuilder.append(value == 0 ? "." : value + " ");
+                stringBuilder.append(value == 0 ? ". " : value + " ");
             }
 
             stringBuilder.append("\n");

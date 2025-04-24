@@ -2,9 +2,10 @@ package org.example;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class SudokuField {
+public class SudokuField implements Serializable {
     private int fieldValue;
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);

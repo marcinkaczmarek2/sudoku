@@ -216,17 +216,17 @@ public class SudokuBoardTest {
     @Test
     public void toStringEmptyBoard() {
         String expectedOutput =
-                          "... | ... | ...\n"
-                        + "... | ... | ...\n"
-                        + "... | ... | ...\n"
+                         ". . .  | . . .  | . . . \n"
+                        + ". . .  | . . .  | . . . \n"
+                        + ". . .  | . . .  | . . . \n"
                         + "-----------------------\n"
-                        + "... | ... | ...\n"
-                        + "... | ... | ...\n"
-                        + "... | ... | ...\n"
+                        + ". . .  | . . .  | . . . \n"
+                        + ". . .  | . . .  | . . . \n"
+                        + ". . .  | . . .  | . . . \n"
                         + "-----------------------\n"
-                        + "... | ... | ...\n"
-                        + "... | ... | ...\n"
-                        + "... | ... | ...\n";
+                        + ". . .  | . . .  | . . . \n"
+                        + ". . .  | . . .  | . . . \n"
+                        + ". . .  | . . .  | . . . \n";
 
         SudokuSolver solver = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(solver);
