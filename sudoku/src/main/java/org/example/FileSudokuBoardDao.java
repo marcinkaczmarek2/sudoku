@@ -1,16 +1,13 @@
 package org.example;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileSudokuBoardDao implements Dao<SudokuBoard>, AutoCloseable {
+public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     private static final Logger logger = Logger.getLogger(FileSudokuBoardDao.class.getName());
     private final Path filePath;
 
@@ -27,7 +24,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard>, AutoCloseable {
     }
 
     @Override
-    public SudokuBoard read(String fileName) {
+    public SudokuBoard read(String fileName) throws DaoException {
         Path fullFilePath = filePath.resolve(fileName);
         SudokuBoard board;
 
@@ -35,26 +32,26 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard>, AutoCloseable {
             board = (SudokuBoard) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             logger.log(Level.SEVERE, "Error reading SudokuBoard from file: " + fullFilePath, e);
-            throw new RuntimeException("Error reading SudokuBoard from file: " + e.getMessage(), e);
+            throw new DaoException("Error reading SudokuBoard from file: " + fullFilePath, e);
         }
 
         return board;
     }
 
     @Override
-    public void write(String name, SudokuBoard object) {
+    public void write(String name, SudokuBoard object) throws DaoException {
         Path fullFilePath = filePath.resolve(name);
 
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fullFilePath.toFile()))) {
             oos.writeObject(object);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error writing SudokuBoard to file: " + fullFilePath, e);
-            throw new RuntimeException("Error writing SudokuBoard to file: " + e.getMessage(), e);
+            throw new DaoException("Error writing SudokuBoard to file: " + fullFilePath, e);
         }
     }
 
     @Override
-    public List<String> names() {
+    public List<String> names() throws DaoException {
         List<String> fileNames = new ArrayList<>();
 
         try {
@@ -63,7 +60,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard>, AutoCloseable {
                     .forEach(path -> fileNames.add(path.getFileName().toString()));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error while reading files from directory: " + filePath, e);
-            throw new RuntimeException("Error while reading files from directory: " + e.getMessage(), e);
+            throw new DaoException("Error while reading files from directory: " + filePath, e);
         }
 
         return fileNames;

@@ -21,7 +21,7 @@ public class FileSudokuBoardDaoTest {
     @BeforeEach
     public void setUp() throws IOException {
         tempDirectory = Files.createTempDirectory("sudokuTest");
-        sudokuFile = SudokuBoardDaoFactory.createFileSudokuBoardDao(tempDirectory.toString());
+        sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
     }
 
     @AfterEach
@@ -32,7 +32,7 @@ public class FileSudokuBoardDaoTest {
     }
 
     @Test
-    public void listNamesCorrectCase() throws IOException {
+    public void listNamesCorrectCase() throws IOException, DaoException {
         Path testFile = tempDirectory.resolve("testBoard.txt");
         Files.createFile(testFile);
 
@@ -43,13 +43,13 @@ public class FileSudokuBoardDaoTest {
     }
 
     @Test
-    public void listNamesEmptyCase() {
+    public void listNamesEmptyCase() throws DaoException {
         List<String> expectedList = new ArrayList<>();
         assertEquals(expectedList, sudokuFile.names());
     }
 
     @Test
-    public void readWhenCorrectDataTestEmptySudoku() throws IOException {
+    public void readWhenCorrectDataTestEmptySudoku() throws IOException, DaoException {
         Path testFile = Files.createTempFile(tempDirectory, "testBoard", ".dat");
 
         SudokuSolver solver = new BacktrackingSudokuSolver();
@@ -69,7 +69,7 @@ public class FileSudokuBoardDaoTest {
     }
 
     @Test
-    public void readWhenCorrectDataTestFullSudoku() throws IOException {
+    public void readWhenCorrectDataTestFullSudoku() throws IOException, DaoException {
         Path testFile = Files.createTempFile(tempDirectory, "testBoard2", ".dat");
 
         SudokuSolver solver = new BacktrackingSudokuSolver();
@@ -100,7 +100,7 @@ public class FileSudokuBoardDaoTest {
     }
 
     @Test
-    public void writeIfCreatesFile() throws IOException {
+    public void writeIfCreatesFile() throws IOException, DaoException {
         Path testFile = Files.createTempFile(tempDirectory, "testBoard", ".dat");
 
         SudokuSolver solver = new BacktrackingSudokuSolver();
@@ -120,7 +120,7 @@ public class FileSudokuBoardDaoTest {
     }
 
     @Test
-    public void writeEmptySudokuCase() throws IOException {
+    public void writeEmptySudokuCase() throws IOException, DaoException {
         Path testFile = Files.createTempFile(tempDirectory, "testBoard3", ".dat");
 
         SudokuSolver solver = new BacktrackingSudokuSolver();
@@ -138,5 +138,4 @@ public class FileSudokuBoardDaoTest {
 
         Files.delete(testFile);
     }
-
 }
