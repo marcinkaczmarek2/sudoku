@@ -6,13 +6,17 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class FileSudokuBoardDaoTest {
     private Dao<SudokuBoard> sudokuFile;
@@ -138,4 +142,58 @@ public class FileSudokuBoardDaoTest {
 
         Files.delete(testFile);
     }
+
+    @Test
+    public void closeMethodExplicit() throws Exception {
+        Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
+        dao.close(); // Covers the close() method
+    }
+
+    @Test
+    public void writeThrowsDaoExceptionWhenFileIsDirectory() throws IOException {
+        Path subDir = Files.createTempDirectory(tempDirectory, "subDir");
+
+        Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
+        SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
+
+        assertThrows(DaoException.class, () ->
+                dao.write(subDir.getFileName().toString(), board));
+    }
+
+    @Test
+    public void constructorThrowsIllegalArgumentExceptionForInvalidPath() {
+        assertThrows(IllegalArgumentException.class, () ->
+                new FileSudokuBoardDao("invalid\0path"));
+    }
+
+    @Test
+    public void readThrowsDaoExceptionForCorruptedFile() throws IOException {
+        Path badFile = tempDirectory.resolve("corruptedBoard.dat");
+        Files.write(badFile, "not a serialized object".getBytes());
+
+        assertThrows(DaoException.class, () -> {
+            sudokuFile.read("corruptedBoard.dat");
+        });
+    }
+
+    @Test
+    public void namesThrowsDaoExceptionWhenPathIsFileNotDirectory() throws IOException {
+        Path fakeDir = tempDirectory.resolve("notADir");
+        Files.createFile(fakeDir); // create a file, not a directory
+
+        Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(fakeDir.toString());
+
+        assertThrows(DaoException.class, dao::names);
+    }
+
+    @Test
+    public void factoryConstructorIsPrivate() throws Exception {
+        Constructor<SudokuBoardDaoFactory> constructor =
+                SudokuBoardDaoFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+
+        Exception exception = assertThrows(InvocationTargetException.class, constructor::newInstance);
+        assertTrue(exception.getCause() instanceof UnsupportedOperationException);
+    }
+
 }

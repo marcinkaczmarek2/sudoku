@@ -17,9 +17,6 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         } catch (InvalidPathException e) {
             logger.log(Level.SEVERE, "Invalid directory name: " + directory, e);
             throw new IllegalArgumentException("Invalid directory name.", e);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "An unexpected error occurred while creating path.", e);
-            throw new RuntimeException("An unexpected error occurred.", e);
         }
     }
 
