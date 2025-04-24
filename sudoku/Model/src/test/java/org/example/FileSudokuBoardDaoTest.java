@@ -196,4 +196,10 @@ public class FileSudokuBoardDaoTest {
         assertTrue(exception.getCause() instanceof UnsupportedOperationException);
     }
 
+    @Test
+    public void constructorWithMessageOnly() {
+        DaoException exception = new DaoException("Test message");
+        assertEquals("Test message", exception.getMessage());
+    }
+
 }
