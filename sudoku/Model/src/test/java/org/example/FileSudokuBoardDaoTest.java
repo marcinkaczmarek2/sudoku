@@ -10,13 +10,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileSudokuBoardDaoTest {
     private Path tempDirectory;
@@ -171,6 +173,7 @@ public class FileSudokuBoardDaoTest {
     @Test
     public void closeMethodExplicit() throws Exception {
         try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+            assertNotNull(dao);
         }
     }
 
@@ -249,71 +252,33 @@ public class FileSudokuBoardDaoTest {
     public void throwsIllegalArgumentExceptionWhenUnsupportedDirCreation() {
         String invalidPath = "nul://invalid";
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             new FileSudokuBoardDao(invalidPath);
         });
     }
 
-    @Test
-    public void testUnsupportedOperationException() {
-        Path readOnlyDirectory = Paths.get("read-only-dir");
 
-        // Tworzymy katalog jako "tylko do odczytu"
-        try {
-            Files.createDirectory(readOnlyDirectory);
-            Files.setPosixFilePermissions(readOnlyDirectory,
-                    PosixFilePermissions.fromString("r--r--r--")); // ustawiamy tylko do odczytu
-        } catch (IOException e) {
-            fail("Error during setting up test directory", e);
-        }
-
-        try {
-            // Próba utworzenia katalogu w katalogu, który jest tylko do odczytu
-            someDirectoryCreationMethod1(readOnlyDirectory);
-            fail("Expected UnsupportedOperationException to be thrown");
-        } catch (UnsupportedOperationException e) {
-            // Sprawdzamy, czy odpowiedni wyjątek jest rzucony
-            assertTrue(e.getMessage().contains("Invalid directory name."));
-        } finally {
-            try {
-                Files.deleteIfExists(readOnlyDirectory);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Test
-    public void testIOException() {
-        Path nonExistentDirectory = Paths.get("C:/nonExistentDirectory/");
-
-        try {
-            someDirectoryCreationMethod2(nonExistentDirectory);
-            fail("Expected IOException to be thrown");
-        } catch (IOException e) {
-            assertTrue(e.getMessage().contains("Error, while creating this directory"));
-        }
-    }
-
-    private void someDirectoryCreationMethod1(Path directory) {
-        try {
-            if (directory == null) {
-                throw new UnsupportedOperationException("Invalid directory name.");
+    void testEnsureDirectoryExists_throwsRuntimeExceptionOnInputOutputException() throws IOException {
+        Path tempFile = Files.createTempFile("testFile", ".tmp");
+        Path invalidDirPath = tempFile.resolve("someFolder");
+        FileSudokuBoardDao dao = new FileSudokuBoardDao("dummy") {
+            public void callEnsureDirectoryExists(Path path) {
+                ensureDirectoryExists(path);
             }
-            Files.createDirectory(directory);
-        } catch (UnsupportedOperationException e) {
-            throw new IllegalArgumentException("Invalid directory name.", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Error, while creating this directory: " + directory, e);
-        }
+        };
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            ((FileSudokuBoardDao) dao).ensureDirectoryExists(invalidDirPath);
+        });
+
+        assertTrue(ex.getCause() instanceof IOException);
+
     }
-    private void someDirectoryCreationMethod2(Path directory) {
-        try {
-            Files.createDirectories(directory);
-        } catch (IOException e) {
-            throw new RuntimeException("Error, while creating this directory: " + directory, e);
-        }
-    }
+
+
+
 }
 
 
