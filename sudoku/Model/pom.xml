@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>org.example</groupId>
-    <artifactId>ModelProject</artifactId>
+    <artifactId>Model</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
@@ -108,26 +108,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.9.0</version>
+                <version>3.6.1</version>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--                <version>3.6.0</version>-->
-<!--                <configuration>-->
-<!--                    <configLocation>checkstyle2025.xml</configLocation>-->
-<!--                    <consoleOutput>true</consoleOutput>-->
-<!--                    <linkXRef>false</linkXRef>-->
-<!--                    <includeTestSourceDirectory>true</includeTestSourceDirectory>-->
-<!--                </configuration>-->
-<!--                <reportSets>-->
-<!--                    <reportSet>-->
-<!--                        <reports>-->
-<!--                            <report>checkstyle</report>-->
-<!--                        </reports>-->
-<!--                    </reportSet>-->
-<!--                </reportSets>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

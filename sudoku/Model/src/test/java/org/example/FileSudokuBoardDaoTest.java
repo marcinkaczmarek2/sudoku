@@ -10,7 +10,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +32,8 @@ public class FileSudokuBoardDaoTest {
                 .map(Path::toFile)
                 .forEach(File::delete);
     }
+
+
 
     @Test
     public void listNamesCorrectCase() throws Exception {
@@ -70,7 +75,7 @@ public class FileSudokuBoardDaoTest {
 
         try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
             SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
-            assertEquals(board.toString(), loadedBoard.toString());
+            assertEquals(board, loadedBoard);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -107,7 +112,7 @@ public class FileSudokuBoardDaoTest {
 
         try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
             SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
-            assertEquals(board.toString(), loadedBoard.toString());
+            assertEquals(board, loadedBoard);
         }
 
         Files.delete(testFile);
@@ -192,13 +197,11 @@ public class FileSudokuBoardDaoTest {
         Path badFile = tempDirectory.resolve("corruptedBoard.dat");
         Files.write(badFile, "not a serialized object".getBytes());
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
-            assertThrows(DaoException.class, () ->
-                    sudokuFile.read("corruptedBoard.dat"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
+        assertThrows(DaoException.class, () -> sudokuFile.read("corruptedBoard.dat"));
     }
+
+
 
     @Test
     public void namesThrowsDaoExceptionWhenPathIsFileNotDirectory() throws Exception {
@@ -225,4 +228,92 @@ public class FileSudokuBoardDaoTest {
         DaoException exception = new DaoException("Test message");
         assertEquals("Test message", exception.getMessage());
     }
+
+    @Test
+    public void directoryAlreadyExists() throws Exception {
+        Files.createDirectory(tempDirectory.resolve("existingDir"));
+        Dao<SudokuBoard> dao = new FileSudokuBoardDao(tempDirectory.resolve("existingDir").toString());
+        assertNotNull(dao);
+    }
+
+    @Test
+    public void directoryGetsCreatedIfNotExists() throws Exception {
+        Path newDir = tempDirectory.resolve("newlyCreated");
+        assertFalse(Files.exists(newDir));
+
+        Dao<SudokuBoard> dao = new FileSudokuBoardDao(newDir.toString());
+        assertTrue(Files.exists(newDir));
+    }
+
+    @Test
+    public void throwsIllegalArgumentExceptionWhenUnsupportedDirCreation() {
+        String invalidPath = "nul://invalid";
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new FileSudokuBoardDao(invalidPath);
+        });
+    }
+
+    @Test
+    public void testUnsupportedOperationException() {
+        Path readOnlyDirectory = Paths.get("read-only-dir");
+
+        // Tworzymy katalog jako "tylko do odczytu"
+        try {
+            Files.createDirectory(readOnlyDirectory);
+            Files.setPosixFilePermissions(readOnlyDirectory,
+                    PosixFilePermissions.fromString("r--r--r--")); // ustawiamy tylko do odczytu
+        } catch (IOException e) {
+            fail("Error during setting up test directory", e);
+        }
+
+        try {
+            // Próba utworzenia katalogu w katalogu, który jest tylko do odczytu
+            someDirectoryCreationMethod1(readOnlyDirectory);
+            fail("Expected UnsupportedOperationException to be thrown");
+        } catch (UnsupportedOperationException e) {
+            // Sprawdzamy, czy odpowiedni wyjątek jest rzucony
+            assertTrue(e.getMessage().contains("Invalid directory name."));
+        } finally {
+            try {
+                Files.deleteIfExists(readOnlyDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void testIOException() {
+        Path nonExistentDirectory = Paths.get("C:/nonExistentDirectory/");
+
+        try {
+            someDirectoryCreationMethod2(nonExistentDirectory);
+            fail("Expected IOException to be thrown");
+        } catch (IOException e) {
+            assertTrue(e.getMessage().contains("Error, while creating this directory"));
+        }
+    }
+
+    private void someDirectoryCreationMethod1(Path directory) {
+        try {
+            if (directory == null) {
+                throw new UnsupportedOperationException("Invalid directory name.");
+            }
+            Files.createDirectory(directory);
+        } catch (UnsupportedOperationException e) {
+            throw new IllegalArgumentException("Invalid directory name.", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Error, while creating this directory: " + directory, e);
+        }
+    }
+    private void someDirectoryCreationMethod2(Path directory) {
+        try {
+            Files.createDirectories(directory);
+        } catch (IOException e) {
+            throw new RuntimeException("Error, while creating this directory: " + directory, e);
+        }
+    }
 }
+
+

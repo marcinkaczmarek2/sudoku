@@ -18,6 +18,17 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
             logger.log(Level.SEVERE, "Invalid directory name: " + directory, e);
             throw new IllegalArgumentException("Invalid directory name.", e);
         }
+        if (!Files.isDirectory(filePath) && !Files.isRegularFile(filePath)){
+            try{
+                Files.createDirectories(filePath);
+            } catch (UnsupportedOperationException e){
+                logger.log(Level.SEVERE, "Cannot create such directory: " + directory, e);
+                throw new IllegalArgumentException("Invalid directory name.", e);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Error, while creating this directory: " + directory, e);
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override

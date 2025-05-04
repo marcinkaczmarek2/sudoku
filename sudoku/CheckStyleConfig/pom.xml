@@ -18,7 +18,7 @@
 
         <dependency>
             <groupId>org.example</groupId>
-            <artifactId>ModelProject</artifactId>
+            <artifactId>Model</artifactId>
             <version>1.0</version>
         </dependency>
 
