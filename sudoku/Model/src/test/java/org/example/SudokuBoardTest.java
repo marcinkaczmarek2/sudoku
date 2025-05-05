@@ -216,17 +216,19 @@ public class SudokuBoardTest {
     @Test
     public void toStringEmptyBoard() {
         String expectedOutput =
-                         ". . .  | . . .  | . . . \n"
-                        + ". . .  | . . .  | . . . \n"
-                        + ". . .  | . . .  | . . . \n"
-                        + "-----------------------\n"
-                        + ". . .  | . . .  | . . . \n"
-                        + ". . .  | . . .  | . . . \n"
-                        + ". . .  | . . .  | . . . \n"
-                        + "-----------------------\n"
-                        + ". . .  | . . .  | . . . \n"
-                        + ". . .  | . . .  | . . . \n"
-                        + ". . .  | . . .  | . . . \n";
+                """
+                        . . .  | . . .  | . . .\s
+                        . . .  | . . .  | . . .\s
+                        . . .  | . . .  | . . .\s
+                        -----------------------
+                        . . .  | . . .  | . . .\s
+                        . . .  | . . .  | . . .\s
+                        . . .  | . . .  | . . .\s
+                        -----------------------
+                        . . .  | . . .  | . . .\s
+                        . . .  | . . .  | . . .\s
+                        . . .  | . . .  | . . .\s
+                        """;
 
         SudokuSolver solver = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(solver);
@@ -249,7 +251,7 @@ public class SudokuBoardTest {
                 boardActual.set(i, j, 0);
             }
         }
-        assertTrue(boardExpected.equals(boardActual));
+        assertEquals(boardExpected, boardActual);
     }
 
     @Test
@@ -264,7 +266,7 @@ public class SudokuBoardTest {
             }
         }
         boardActual.set(0, 0, 1);
-        assertFalse(boardExpected.equals(boardActual));
+        assertNotEquals(boardExpected, boardActual);
     }
 
     @Test
@@ -279,7 +281,7 @@ public class SudokuBoardTest {
             }
         }
         assertEquals(boardExpected.hashCode(), boardActual.hashCode());
-        assertTrue(boardExpected.equals(boardActual));
+        assertEquals(boardExpected, boardActual);
     }
 
     @Test
@@ -295,6 +297,6 @@ public class SudokuBoardTest {
         }
         boardActual.set(0, 0, 1);
         assertNotEquals(boardExpected.hashCode(), boardActual.hashCode());
-        assertFalse(boardExpected.equals(boardActual));
+        assertNotEquals(boardExpected, boardActual);
     }
 }

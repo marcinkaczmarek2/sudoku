@@ -11,7 +11,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,12 +31,21 @@ public class FileSudokuBoardDaoTest {
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
-        Files.walk(tempDirectory)
-                .map(Path::toFile)
-                .forEach(File::delete);
-    }
+    public void tearDown() {
 
+        try (Stream<Path> paths = Files.walk(tempDirectory)) {
+            paths
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(file -> {
+                        if (!file.delete()) {
+                            System.err.println("Deletion of file failed, path to this file: " + file.getAbsolutePath());
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     @Test
@@ -89,6 +100,21 @@ public class FileSudokuBoardDaoTest {
     public void readWhenCorrectDataTestFullSudoku() throws Exception {
         Path testFile = Files.createTempFile(tempDirectory, "testBoard2", ".dat");
 
+        SudokuBoard board = getSudokuBoard();
+
+        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+            sudokuFile.write(testFile.getFileName().toString(), board);
+        }
+
+        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+            SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
+            assertEquals(board, loadedBoard);
+        }
+
+        Files.delete(testFile);
+    }
+
+    private static SudokuBoard getSudokuBoard() {
         SudokuSolver solver = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(solver);
         int[][] values = {
@@ -107,17 +133,7 @@ public class FileSudokuBoardDaoTest {
                 board.set(row, column, values[row][column]);
             }
         }
-
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
-            sudokuFile.write(testFile.getFileName().toString(), board);
-        }
-
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
-            SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
-            assertEquals(board, loadedBoard);
-        }
-
-        Files.delete(testFile);
+        return board;
     }
 
     @Test
@@ -191,8 +207,11 @@ public class FileSudokuBoardDaoTest {
 
     @Test
     public void constructorThrowsIllegalArgumentExceptionForInvalidPath() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new FileSudokuBoardDao("invalid\0path"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            try (FileSudokuBoardDao ignored = new FileSudokuBoardDao("invalid\0path")) {
+                //intentional empty try block
+            }
+        });
     }
 
     @Test
@@ -203,7 +222,6 @@ public class FileSudokuBoardDaoTest {
         Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
         assertThrows(DaoException.class, () -> sudokuFile.read("corruptedBoard.dat"));
     }
-
 
 
     @Test
@@ -240,23 +258,28 @@ public class FileSudokuBoardDaoTest {
     }
 
     @Test
-    public void directoryGetsCreatedIfNotExists() throws Exception {
+    public void directoryGetsCreatedIfNotExists() {
         Path newDir = tempDirectory.resolve("newlyCreated");
         assertFalse(Files.exists(newDir));
 
-        Dao<SudokuBoard> dao = new FileSudokuBoardDao(newDir.toString());
+        try (Dao<SudokuBoard> ignored = new FileSudokuBoardDao(newDir.toString())) {
+            //intentional empty try block
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertTrue(Files.exists(newDir));
     }
 
     @Test
-    public void throwsIllegalArgumentExceptionWhenUnsupportedDirCreation() {
+    public void constructorThrowsRuntimeExceptionForInvalidPath() {
         String invalidPath = "nul://invalid";
 
         assertThrows(RuntimeException.class, () -> {
-            new FileSudokuBoardDao(invalidPath);
+            try (FileSudokuBoardDao ignored = new FileSudokuBoardDao(invalidPath)) {
+                //intentional empty try block
+            }
         });
     }
-
 
 
     @Test
@@ -269,16 +292,11 @@ public class FileSudokuBoardDaoTest {
             }
         };
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
-            ((FileSudokuBoardDao) dao).ensureDirectoryExists(invalidDirPath);
-        });
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> dao.ensureDirectoryExists(invalidDirPath));
 
-        assertTrue(ex.getCause() instanceof IOException);
+        assertInstanceOf(IOException.class, ex.getCause());
 
     }
-
-
-
 }
 
 

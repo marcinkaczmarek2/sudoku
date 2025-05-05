@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     private static final Logger logger = Logger.getLogger(FileSudokuBoardDao.class.getName());
@@ -63,9 +64,8 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     public List<String> names() throws DaoException {
         List<String> fileNames = new ArrayList<>();
 
-        try {
-            Files.list(filePath)
-                    .filter(Files::isRegularFile)
+        try (Stream<Path> paths = Files.list(filePath)) {
+            paths.filter(Files::isRegularFile)
                     .forEach(path -> fileNames.add(path.getFileName().toString()));
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error while reading files from directory: " + filePath, e);
@@ -74,6 +74,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
 
         return fileNames;
     }
+
 
     @Override
     public void close() {
