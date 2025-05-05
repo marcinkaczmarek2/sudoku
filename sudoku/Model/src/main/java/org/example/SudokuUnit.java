@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.HashSet;
 
-public abstract class SudokuUnit {
+public abstract class SudokuUnit implements Cloneable {
     protected SudokuField[] fields;
 
     public SudokuUnit() {
@@ -56,5 +56,18 @@ public abstract class SudokuUnit {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("fields", fields)
                 .toString();
+    }
+
+    @Override
+    public SudokuUnit clone() {
+        try {
+            SudokuUnit cloned = (SudokuUnit) super.clone();
+            for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+                cloned.fields[i] = (SudokuField) this.fields[i].clone();
+            }
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

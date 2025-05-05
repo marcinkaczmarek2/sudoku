@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class SudokuBoard implements Serializable {
+public class SudokuBoard implements Serializable, Cloneable {
     public static final int BOARD_SIZE = 9;
     protected final List<SudokuField> board;
     private final transient SudokuSolver solver;
@@ -111,6 +111,19 @@ public class SudokuBoard implements Serializable {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public SudokuBoard clone() {
+        try {
+            SudokuBoard cloned = (SudokuBoard) super.clone();
+            for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+                cloned.board.set(i, (SudokuField) this.board.get(i).clone());
+            }
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
 

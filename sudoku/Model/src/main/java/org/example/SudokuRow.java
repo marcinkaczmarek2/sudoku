@@ -1,9 +1,9 @@
-        package org.example;
+package org.example;
 
 
-        public class SudokuRow extends SudokuUnit {
+public class SudokuRow extends SudokuUnit {
 
-            public SudokuRow() {
-                super();
-            }
-        }
+    public SudokuRow() {
+        super();
+    }
+}

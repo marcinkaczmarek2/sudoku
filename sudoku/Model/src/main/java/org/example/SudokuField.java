@@ -5,7 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class SudokuField implements Serializable {
+public class SudokuField implements Serializable, Comparable<SudokuField>, Cloneable {
     private int fieldValue;
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -48,5 +48,22 @@ public class SudokuField implements Serializable {
     @Override
     public String toString() {
         return "SudokuField[" + fieldValue + "]";
+    }
+
+    @Override
+    public int compareTo(SudokuField other) {
+        if (other == null) {
+            throw new NullPointerException("Argument to compareTo is null");
+        }
+        return Integer.compare(this.fieldValue, other.fieldValue);
+    }
+
+    @Override
+    protected Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
