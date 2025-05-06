@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class SudokuBoard implements Serializable, Cloneable {
     public static final int BOARD_SIZE = 9;
@@ -77,6 +78,20 @@ public class SudokuBoard implements Serializable, Cloneable {
             }
         }
         return sudokuBox;
+    }
+
+    public void removeRandomCells(int count) {
+        Random rand = new Random();
+        int removed = 0;
+
+        while (removed < count) {
+            int row = rand.nextInt(9);
+            int col = rand.nextInt(9);
+            if (this.get(row, col) != 0) {
+                this.set(row, col, 0);
+                removed++;
+            }
+        }
     }
 
     @Override
