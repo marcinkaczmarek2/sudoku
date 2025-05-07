@@ -14,7 +14,7 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Sudoku Menu");
+        primaryStage.setTitle("Sudoku Difficulty Menu");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
