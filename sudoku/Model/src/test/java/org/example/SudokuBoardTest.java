@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SudokuBoardTest {
     public static final int BOARD_SIZE = 9;
@@ -298,5 +295,53 @@ public class SudokuBoardTest {
         boardActual.set(0, 0, 1);
         assertNotEquals(boardExpected.hashCode(), boardActual.hashCode());
         assertNotEquals(boardExpected, boardActual);
+    }
+    @Test
+    public void testShallowCopy() {
+        SudokuSolver solver = new BacktrackingSudokuSolver(); // Use your actual solver implementation
+        SudokuBoard original = new SudokuBoard(solver);
+        SudokuBoard clone = original.clone();
+
+        assertNotSame(original, clone, "Cloned board should not be the same instance as the original");
+    }
+
+    @Test
+    public void testDeepCopyFieldInstances() {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard original = new SudokuBoard(solver);
+        original.set(0, 0, 5);
+
+        SudokuBoard clone = original.clone();
+
+        // Verify fields are not the same object (i.e., deep copy)
+        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+            for (int j = 0; j < SudokuBoard.BOARD_SIZE; j++) {
+                assertNotSame(
+                        original.board.get(i * 9 + j),
+                        clone.board.get(i * 9 + j),
+                        "Each field should be a new instance in the clone"
+                );
+            }
+        }
+    }
+
+    @Test
+    public void testValueEqualityAfterClone() {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard original = new SudokuBoard(solver);
+        original.set(1, 1, 9);
+        original.set(2, 2, 7);
+
+        SudokuBoard clone = original.clone();
+
+        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+            for (int j = 0; j < SudokuBoard.BOARD_SIZE; j++) {
+                assertEquals(
+                        original.get(i, j),
+                        clone.get(i, j),
+                        String.format("Value at (%d, %d) should match after cloning", i, j)
+                );
+            }
+        }
     }
 }

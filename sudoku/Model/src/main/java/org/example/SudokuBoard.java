@@ -4,13 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class SudokuBoard implements Serializable, Cloneable {
     public static final int BOARD_SIZE = 9;
-    protected final List<SudokuField> board;
+    protected List<SudokuField> board;
     private final transient SudokuSolver solver;
 
     public SudokuBoard(SudokuSolver solver) {
@@ -19,7 +20,9 @@ public class SudokuBoard implements Serializable, Cloneable {
         for (int i = 0; i < fields.length; i++) {
             fields[i] = new SudokuField();
         }
-        board = Arrays.asList(fields);
+//        board = Arrays.asList(fields);
+        board = new ArrayList<>(Arrays.asList(fields));
+
         this.solver = solver;
     }
 
@@ -128,17 +131,38 @@ public class SudokuBoard implements Serializable, Cloneable {
         return stringBuilder.toString();
     }
 
-    @Override
-    public SudokuBoard clone() {
-        try {
-            SudokuBoard cloned = (SudokuBoard) super.clone();
-            for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
-                cloned.board.set(i, (SudokuField) this.board.get(i).clone());
-            }
-            return cloned;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
+//    @Override
+//    public SudokuBoard clone() {
+//        try {
+//            SudokuBoard cloned = (SudokuBoard) super.clone();
+//            for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
+//                cloned.board.set(i, (SudokuField) this.board.get(i).clone());
+//            }
+//            return cloned;
+//        } catch (CloneNotSupportedException e) {
+//            throw new AssertionError();
+//        }
+//    }
+@Override
+public SudokuBoard clone() {
+    try {
+        SudokuBoard cloned = (SudokuBoard) super.clone();
+
+        // creating a new list in which we fill them with cloned SudokuField instances
+        List<SudokuField> clonedFields = new ArrayList<>();
+        for (SudokuField field : this.board) {
+            clonedFields.add(field.clone());
         }
+
+        // Assigning this new list to the newly cloned baord
+        cloned.board = clonedFields;
+
+        return cloned;
+    } catch (CloneNotSupportedException e) {
+        throw new AssertionError("Cloning failed", e);
     }
+}
+
+
 }
 
