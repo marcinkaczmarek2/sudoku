@@ -4,7 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class SudokuBoardTest {
     public static final int BOARD_SIZE = 9;
@@ -296,6 +301,7 @@ public class SudokuBoardTest {
         assertNotEquals(boardExpected.hashCode(), boardActual.hashCode());
         assertNotEquals(boardExpected, boardActual);
     }
+
     @Test
     public void testShallowCopy() {
         SudokuSolver solver = new BacktrackingSudokuSolver(); // Use your actual solver implementation

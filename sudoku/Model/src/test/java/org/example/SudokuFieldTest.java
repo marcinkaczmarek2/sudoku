@@ -2,7 +2,12 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 
 public class SudokuFieldTest {
@@ -79,6 +84,7 @@ public class SudokuFieldTest {
         assertNotEquals(field.hashCode(), fieldCopy.hashCode());
         assertFalse(field.equals(fieldCopy));
     }
+
     @Test
     public void testCompareToLessThan() {
         SudokuField a = new SudokuField();
@@ -114,6 +120,7 @@ public class SudokuFieldTest {
         SudokuField a = new SudokuField();
         a.setFieldValue(5);
 
-        assertThrows(NullPointerException.class, () -> a.compareTo(null), "compareTo(null) should throw NullPointerException");
+        assertThrows(NullPointerException.class, () -> a.compareTo(null),
+                "compareTo(null) should throw NullPointerException");
     }
 }

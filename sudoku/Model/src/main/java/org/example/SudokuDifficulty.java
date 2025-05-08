@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.Random;
-
 public enum SudokuDifficulty {
     EASY(30),
     MEDIUM(40),
