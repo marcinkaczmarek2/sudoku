@@ -2,11 +2,7 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SudokuUnitTest {
@@ -109,5 +105,22 @@ public class SudokuUnitTest {
     public void equalsWithNullObjectTriggersNullCheck() {
         SudokuRow row = new SudokuRow();
         assertFalse(row.equals(null));
+    }
+
+    @Test
+    public void testCloneIsDeepCopy() {
+        SudokuRow original = new SudokuRow();
+        original.fields[0].setFieldValue(5);
+        original.fields[1].setFieldValue(3);
+
+        SudokuRow clone = (SudokuRow) original.clone();
+
+        assertNotSame(original, clone);
+        assertNotSame(original.fields, clone.fields); // This now passes
+
+        for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
+            assertNotSame(original.fields[i], clone.fields[i]);
+            assertEquals(original.fields[i].getFieldValue(), clone.fields[i].getFieldValue());
+        }
     }
 }

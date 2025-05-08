@@ -62,12 +62,17 @@ public abstract class SudokuUnit implements Cloneable {
     public SudokuUnit clone() {
         try {
             SudokuUnit cloned = (SudokuUnit) super.clone();
+
+            // Create a new array and deep clone each field
+            cloned.fields = new SudokuField[SudokuBoard.BOARD_SIZE];
             for (int i = 0; i < SudokuBoard.BOARD_SIZE; i++) {
                 cloned.fields[i] = (SudokuField) this.fields[i].clone();
             }
+
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
     }
+
 }
