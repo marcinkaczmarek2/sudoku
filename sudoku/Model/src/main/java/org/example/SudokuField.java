@@ -58,10 +58,14 @@ public class SudokuField implements Serializable, Comparable<SudokuField>, Clone
         return Integer.compare(this.fieldValue, other.fieldValue);
     }
 
+    protected SudokuField doClone() throws CloneNotSupportedException {
+        return (SudokuField) super.clone();
+    }
+
     @Override
     protected SudokuField clone() {
         try {
-            return (SudokuField) super.clone();
+            return doClone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

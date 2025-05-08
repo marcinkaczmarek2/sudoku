@@ -130,24 +130,26 @@ public class SudokuBoard implements Serializable, Cloneable {
         return stringBuilder.toString();
     }
 
+    protected SudokuBoard doClone() throws CloneNotSupportedException {
+        return (SudokuBoard) super.clone();
+    }
+
     @Override
     public SudokuBoard clone() {
         try {
-            SudokuBoard cloned = (SudokuBoard) super.clone();
+            SudokuBoard cloned = doClone();
 
-            // creating a new list in which we fill them with cloned SudokuField instances
             List<SudokuField> clonedFields = new ArrayList<>();
             for (SudokuField field : this.board) {
                 clonedFields.add(field.clone());
             }
 
-            // Assigning this new list to the newly cloned baord
             cloned.board = clonedFields;
-
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("Cloning failed", e);
         }
     }
+
 }
 
