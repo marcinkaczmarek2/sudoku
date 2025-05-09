@@ -1,4 +1,4 @@
-package org.example;
+package sudoku.Models;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

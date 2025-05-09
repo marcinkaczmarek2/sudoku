@@ -1,4 +1,6 @@
-package org.example;
+package sudoku.Daos;
+
+import sudoku.Exceptions.DaoException;
 
 import java.util.List;
 

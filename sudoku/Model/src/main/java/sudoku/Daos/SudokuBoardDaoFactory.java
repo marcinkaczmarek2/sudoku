@@ -1,4 +1,6 @@
-package org.example;
+package sudoku.Daos;
+
+import sudoku.Models.SudokuBoard;
 
 public class SudokuBoardDaoFactory {
 

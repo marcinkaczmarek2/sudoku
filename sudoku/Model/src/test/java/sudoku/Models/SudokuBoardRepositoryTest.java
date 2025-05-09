@@ -1,4 +1,4 @@
-package org.example;
+package sudoku.Models;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package org.example;
+package sudoku.Exceptions;
 
 public class DaoException extends Exception {
     public DaoException(String message, Throwable cause) {

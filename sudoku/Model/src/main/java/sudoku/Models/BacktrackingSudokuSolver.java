@@ -1,4 +1,4 @@
-package org.example;
+package sudoku.Models;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;

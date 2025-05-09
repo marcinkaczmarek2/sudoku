@@ -1,4 +1,4 @@
-package org.example;
+package sudoku.Models;
 
 public enum SudokuDifficulty {
     EASY(30),
