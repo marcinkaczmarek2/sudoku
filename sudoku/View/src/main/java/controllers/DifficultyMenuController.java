@@ -8,10 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
-import sudoku.Models.BacktrackingSudokuSolver;
-import sudoku.Models.SudokuBoard;
-import sudoku.Models.SudokuDifficulty;
-import sudoku.Models.SudokuSolver;
+import sudoku.models.BacktrackingSudokuSolver;
+import sudoku.models.SudokuBoard;
+import sudoku.models.SudokuDifficulty;
+import sudoku.models.SudokuSolver;
 
 import java.io.IOException;
 
