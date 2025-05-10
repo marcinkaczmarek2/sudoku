@@ -1,8 +1,10 @@
 package sudoku.models;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,6 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SudokuBoardTest {
     public static final int BOARD_SIZE = 9;
+
+    @BeforeEach
+    public void setUp() {
+        LocalizationService.initialize(Locale.forLanguageTag("pl"));
+    }
 
     @Test
     public void areBoardsDifferent() {

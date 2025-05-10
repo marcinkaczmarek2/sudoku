@@ -1,7 +1,10 @@
 package sudoku.models;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sudoku.exceptions.SudokuFieldCompareException;
+
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,8 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-
 public class SudokuFieldTest {
+    @BeforeEach
+    public void setUp() {
+        LocalizationService.initialize(Locale.forLanguageTag("pl"));
+    }
+
+
     @Test
     public void toStringCorrectnessTrue() {
         SudokuField field = new SudokuField();

@@ -141,7 +141,7 @@ public class SudokuBoard implements Serializable, Cloneable {
         try {
             return (SudokuBoard) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new SudokuBoardCloneException("Cloning failed in doClone()", e);
+            throw new SudokuBoardCloneException(LocalizationService.getInstance().get("error.board_clone"), e);
         }
     }
 

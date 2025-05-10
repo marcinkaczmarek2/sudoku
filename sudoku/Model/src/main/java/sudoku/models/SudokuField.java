@@ -56,7 +56,7 @@ public class SudokuField implements Serializable, Comparable<SudokuField>, Clone
     @Override
     public int compareTo(SudokuField other) {
         if (other == null) {
-            throw new SudokuFieldCompareException("Cannot compare to null");
+            throw new SudokuFieldCompareException(LocalizationService.getInstance().get("error.null_field"));
         }
         return Integer.compare(this.fieldValue, other.fieldValue);
     }
@@ -65,7 +65,7 @@ public class SudokuField implements Serializable, Comparable<SudokuField>, Clone
         try {
             return (SudokuField) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new SudokuFieldCloneException("Cloning failed in doClone()", e);
+            throw new SudokuFieldCloneException(LocalizationService.getInstance().get("error.field_clone"), e);
         }
     }
 

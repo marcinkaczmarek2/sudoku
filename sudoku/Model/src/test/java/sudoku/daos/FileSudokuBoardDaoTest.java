@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sudoku.exceptions.DaoAccessException;
 import sudoku.exceptions.DaoException;
+import sudoku.exceptions.DaoReadException;
 import sudoku.models.BacktrackingSudokuSolver;
+import sudoku.models.LocalizationService;
 import sudoku.models.SudokuBoard;
 import sudoku.models.SudokuSolver;
 
@@ -18,6 +20,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +36,7 @@ public class FileSudokuBoardDaoTest {
     @BeforeEach
     public void setUp() throws IOException {
         tempDirectory = Files.createTempDirectory("sudokuTest");
+        LocalizationService.initialize(Locale.forLanguageTag("pl"));
     }
 
     @AfterEach
@@ -225,7 +229,7 @@ public class FileSudokuBoardDaoTest {
         Files.write(badFile, "not a serialized object".getBytes());
 
         Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
-        assertThrows(DaoException.class, () -> sudokuFile.read("corruptedBoard.dat"));
+        assertThrows(DaoReadException.class, () -> sudokuFile.read("corruptedBoard.dat"));
     }
 
 

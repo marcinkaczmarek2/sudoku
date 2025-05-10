@@ -63,7 +63,7 @@ public abstract class SudokuUnit implements Cloneable {
         try {
             return (SudokuUnit) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new SudokuUnitCloneException("Cloning failed in doClone()", e);
+            throw new SudokuUnitCloneException(LocalizationService.getInstance().get("error.unit_clone"), e);
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class SudokuUnit implements Cloneable {
             }
             return cloned;
         } catch (SudokuUnitCloneException e) {
-            throw new SudokuUnitCloneException("Cloning failed: " + e.getMessage(), e);
+            throw new SudokuUnitCloneException(LocalizationService.getInstance().get("error.unit_clone"), e);
         }
     }
 }

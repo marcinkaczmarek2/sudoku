@@ -1,19 +1,29 @@
 package sudoku.models;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sudoku.exceptions.CloneException;
 import sudoku.exceptions.SudokuBoardCloneException;
 import sudoku.exceptions.SudokuFieldCloneException;
 import sudoku.exceptions.SudokuUnitCloneException;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CloneExceptionTest {
+
+
+    @BeforeEach
+    public void setUp() {
+        LocalizationService.initialize(Locale.forLanguageTag("pl"));
+    }
 
     // Broken SudokuField to simulate error during deep copy
     static class BrokenSudokuField extends SudokuField {
@@ -25,7 +35,8 @@ public class CloneExceptionTest {
 
     @Test
     void testSudokuBoardCloneThrowsDueToField() {
-        SudokuBoard board = new SudokuBoard(b -> {});
+        SudokuBoard board = new SudokuBoard(b -> {
+        });
 
         // Replace one field with a broken one to simulate failure during cloning
         List<SudokuField> brokenBoard = new ArrayList<>(board.board);
@@ -53,7 +64,8 @@ public class CloneExceptionTest {
 
     @Test
     void testSudokuBoardCloneThrowsDueToBaseClone() {
-        SudokuBoard board = new BrokenBoardBaseClone(b -> {});
+        SudokuBoard board = new BrokenBoardBaseClone(b -> {
+        });
         SudokuBoardCloneException ex = assertThrows(SudokuBoardCloneException.class, board::clone);
         assertEquals("Simulated base clone failure", ex.getMessage());
         assertTrue(ex.getCause() instanceof CloneException);
