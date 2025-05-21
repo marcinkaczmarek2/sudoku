@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SudokuGridController">
-    <StackPane fx:id="container" layoutX="19.5" layoutY="19.5" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.SudokuGridController" prefHeight="600.0" prefWidth="800.0" spacing="0">
+
+    <MenuBar>
+        <menus>
+            <Menu fx:id="menuFile" mnemonicParsing="false" text="%menu.file">
+                <items>
+                    <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#handleSave" text="%menu.save" />
+                    <MenuItem fx:id="menuLoad" mnemonicParsing="false" onAction="#handleLoad" text="%menu.load" />
+                </items>
+            </Menu>
+            <Menu fx:id="menuLanguage" mnemonicParsing="false" text="%menu.language">
+                <items>
+                    <MenuItem fx:id="menuEn" mnemonicParsing="false" onAction="#handleLangEn" text="%menuitem.en" />
+                    <MenuItem fx:id="menuPl" mnemonicParsing="false" onAction="#handleLangPl" text="%menuitem.pl" />
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+
+    <StackPane fx:id="container" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="20.0" bottom="20.0" left="20.0" right="20.0" />
+        </padding>
         <GridPane fx:id="sudokuGrid" gridLinesVisible="true" maxHeight="1000.0" maxWidth="1000.0">
             <columnConstraints>
                 <ColumnConstraints percentWidth="11.111" />
@@ -25,7 +48,6 @@
                 <ColumnConstraints percentWidth="11.111" />
                 <ColumnConstraints percentWidth="11.111" />
             </columnConstraints>
-
             <rowConstraints>
                 <RowConstraints percentHeight="11.111" />
                 <RowConstraints percentHeight="11.111" />
@@ -38,7 +60,7 @@
                 <RowConstraints percentHeight="11.111" />
             </rowConstraints>
 
-            <TextField GridPane.columnIndex="1" />
+                  <TextField GridPane.columnIndex="1" />
             <TextField GridPane.columnIndex="2" />
             <TextField GridPane.columnIndex="3" />
             <TextField GridPane.columnIndex="4" />
@@ -125,22 +147,4 @@
             <TextField GridPane.columnIndex="2" GridPane.rowIndex="8" />
         </GridPane>
     </StackPane>
-   <MenuBar>
-     <menus>
-         <Menu fx:id="menuFile" mnemonicParsing="false" text="%menu.file">
-             <items>
-                 <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#handleSave" text="%menu.save" />
-                 <MenuItem fx:id="menuLoad" mnemonicParsing="false" onAction="#handleLoad" text="%menu.load" />
-             </items>
-         </Menu>
-
-         <Menu fx:id="menuLanguage" mnemonicParsing="false" text="%menu.language">
-             <items>
-                 <MenuItem fx:id="menuEn" mnemonicParsing="false" onAction="#handleLangEn" text="%menuitem.en" />
-               <MenuItem fx:id="menuPl" mnemonicParsing="false" onAction="#handleLangPl" text="%menuitem.pl" />
-             </items>
-         </Menu>
-
-     </menus>
-   </MenuBar>
-</AnchorPane>
+</VBox>

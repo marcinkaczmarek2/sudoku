@@ -2,11 +2,8 @@ package controllers;
 
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -20,14 +17,12 @@ import org.slf4j.LoggerFactory;
 import sudoku.daos.Dao;
 import sudoku.daos.DaoFactory;
 import sudoku.exceptions.DaoException;
-import sudoku.exceptions.GUIException;
-import sudoku.exceptions.SetStageException;
+import sudoku.exceptions.GuiException;
 import sudoku.models.LockedFieldsSudokuBoardDecorator;
 import sudoku.models.SudokuBoard;
 import sudoku.models.SudokuField;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -90,9 +85,13 @@ public class SudokuGridController {
             logger.error("Error while creating getLockedFileDao");
         }
     }
+
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
     private void handleSave() {
-        if (board == null) return;
+        if (board == null) {
+            return;
+        }
 
         TextInputDialog dialog = new TextInputDialog(LangManager.resources.getString("dialog.new.puzzle"));
         dialog.setTitle(LangManager.resources.getString("dialog.save.title"));
@@ -121,13 +120,14 @@ public class SudokuGridController {
         });
     }
 
-
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
     private void handleLoad() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(LangManager.resources.getString("dialog.load.title"));
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(LangManager.resources.getString("dialog.load.extension_filter"), "*.sudoku")
+                new FileChooser.ExtensionFilter(LangManager.resources
+                        .getString("dialog.load.extension_filter"), "*.sudoku")
         );
         File file = fileChooser.showOpenDialog(container.getScene().getWindow());
 
@@ -211,7 +211,7 @@ public class SudokuGridController {
                     });
                 } catch (NoSuchMethodException e) {
                     logger.error("Property binding failed");
-                    throw new GUIException("Property binding failed for cell [" + row + "," + col + "]", e);
+                    throw new GuiException(LangManager.resources.getString("error.binding_cell"), e);
                 }
             }
         }
@@ -226,7 +226,7 @@ public class SudokuGridController {
             for (int col = 0; col < 9; col++) {
                 int value = this.board.get(row, col);
                 cells[row][col].setText(value == 0 ? "" : String.valueOf(value));
-                if (value!=0){
+                if (value != 0) {
                     cells[row][col].setEditable(false);
                     cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: whitesmoke;");
                 }
@@ -256,7 +256,9 @@ public class SudokuGridController {
                 if (existingStyle.contains("-fx-background-color")) {
                     int start = existingStyle.indexOf("-fx-background-color");
                     int end = existingStyle.indexOf(";", start);
-                    if (end == -1) end = existingStyle.length();
+                    if (end == -1) {
+                        end = existingStyle.length();
+                    }
                     backgroundColor = existingStyle.substring(start, end + 1).trim();
                 }
 
@@ -315,14 +317,16 @@ public class SudokuGridController {
         return borderStyle;
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleLangPl(ActionEvent event) {
+    private void handleLangPl() {
         LangManager.setLocale(new Locale("pl"));
         reloadUI();
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleLangEn(ActionEvent event) {
+    private void handleLangEn() {
         LangManager.setLocale(new Locale("en"));
         reloadUI();
     }

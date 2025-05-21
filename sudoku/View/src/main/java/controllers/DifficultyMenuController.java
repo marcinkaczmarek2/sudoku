@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -12,7 +13,6 @@ import javafx.stage.Stage;
 import managers.LangManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sudoku.daos.FileLockedSudokuBoardDao;
 import sudoku.exceptions.SetStageException;
 import sudoku.models.*;
 
@@ -48,20 +48,21 @@ public class DifficultyMenuController {
         startButton.setOnAction(this::handleStart);
     }
 
-
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleLangPl(ActionEvent event) {
+    private void handleLangPl() {
         LangManager.setLocale(new Locale("pl"));
         reloadUI();
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleLangEn(ActionEvent event) {
+    private void handleLangEn() {
         LangManager.setLocale(new Locale("en"));
         reloadUI();
     }
 
-    private void handleStart(javafx.event.ActionEvent event) {
+    private void handleStart(ActionEvent event) {
         SudokuDifficulty difficulty;
 
         if (easyRadio.isSelected()) {
@@ -78,7 +79,8 @@ public class DifficultyMenuController {
         difficulty.apply(board);
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SudokuGrid.fxml"), LangManager.getBundle());
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/fxml/SudokuGrid.fxml"), LangManager.getBundle());
             Parent root = loader.load();
 
             SudokuGridController controller = loader.getController();
@@ -113,7 +115,8 @@ public class DifficultyMenuController {
 
             Stage stage = (Stage) difficultyStackPane.getScene().getWindow();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/DifficultyMenu.fxml"), LangManager.getBundle());
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/fxml/DifficultyMenu.fxml"), LangManager.getBundle());
             Parent root = loader.load();
 
             stage.getScene().setRoot(root);
@@ -124,6 +127,7 @@ public class DifficultyMenuController {
                 case "easy" -> controller.setSelectedDifficulty("easy");
                 case "medium" -> controller.setSelectedDifficulty("medium");
                 case "hard" -> controller.setSelectedDifficulty("hard");
+                default -> controller.setSelectedDifficulty("easy");
             }
 
         } catch (IOException e) {
@@ -137,9 +141,26 @@ public class DifficultyMenuController {
             case "easy" -> easyRadio.setSelected(true);
             case "medium" -> mediumRadio.setSelected(true);
             case "hard" -> hardRadio.setSelected(true);
+            default -> easyRadio.setSelected(true);
         }
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    @FXML
+    private void showAuthors() {
+        Locale currentLocale = LangManager.getBundle().getLocale();
+
+        ResourceBundle authors = ResourceBundle.getBundle("resource_bundle.Authors", currentLocale);
+
+        String name1 = authors.getString("author1.name");
+        String name2 = authors.getString("author2.name");
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(LangManager.getBundle().getString("menu.author.info"));
+        alert.setHeaderText(LangManager.getBundle().getString("menu.author.info"));
+        alert.setContentText(name1 + " & " + name2);
+        alert.showAndWait();
+    }
 
 
 }

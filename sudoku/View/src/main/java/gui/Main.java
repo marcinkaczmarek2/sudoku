@@ -13,11 +13,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/DifficultyMenu.fxml"), LangManager.getBundle());
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getResource("/fxml/DifficultyMenu.fxml"), LangManager.getBundle());
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/styles.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass()
+                .getResource("/style/styles.css")).toExternalForm());
         primaryStage.setTitle(LangManager.resources.getString("title.difficulty.menu"));
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(500);

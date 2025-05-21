@@ -1,6 +1,6 @@
 package sudoku.exceptions;
 
-public class SetStageException extends GUIException {
+public class SetStageException extends GuiException {
     public SetStageException(String message, Throwable cause) {
         super(message, cause);
     }
