@@ -150,7 +150,7 @@ public class DifficultyMenuController {
     private void showAuthors() {
         Locale currentLocale = LangManager.getBundle().getLocale();
 
-        ResourceBundle authors = ResourceBundle.getBundle("resource_bundle.Authors", currentLocale);
+        ResourceBundle authors = ResourceBundle.getBundle("authors.Authors", currentLocale);
 
         String name1 = authors.getString("author1.name");
         String name2 = authors.getString("author2.name");
