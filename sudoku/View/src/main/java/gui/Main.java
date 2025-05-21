@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class Main extends Application {
 
     @Override
@@ -14,8 +16,11 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Sudoku Difficulty Menu");
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
+        primaryStage.setTitle("Sudoku - Difficulty Menu");
         primaryStage.setScene(scene);
+        primaryStage.setMinWidth(500);
+        primaryStage.setMinHeight(500);
         primaryStage.show();
     }
 

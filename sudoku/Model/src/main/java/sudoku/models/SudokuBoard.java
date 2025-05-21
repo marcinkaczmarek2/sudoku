@@ -158,5 +158,8 @@ public class SudokuBoard implements Serializable, Cloneable {
         return cloned;
     }
 
+    public SudokuField getField(int row, int col) {
+        return board.get(row * 9 + col);
+    }
 }
 
