@@ -1,20 +1,32 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import sudoku.models.BacktrackingSudokuSolver;
-import sudoku.models.SudokuBoard;
-import sudoku.models.SudokuDifficulty;
-import sudoku.models.SudokuSolver;
+import managers.LangManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sudoku.daos.FileLockedSudokuBoardDao;
+import sudoku.exceptions.SetStageException;
+import sudoku.models.*;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class DifficultyMenuController {
+
+    private static final Logger logger = LoggerFactory.getLogger(DifficultyMenuController.class.getName());
+
+    @FXML
+    private StackPane difficultyStackPane;
 
     @FXML
     private RadioButton easyRadio;
@@ -36,6 +48,19 @@ public class DifficultyMenuController {
         startButton.setOnAction(this::handleStart);
     }
 
+
+    @FXML
+    private void handleLangPl(ActionEvent event) {
+        LangManager.setLocale(new Locale("pl"));
+        reloadUI();
+    }
+
+    @FXML
+    private void handleLangEn(ActionEvent event) {
+        LangManager.setLocale(new Locale("en"));
+        reloadUI();
+    }
+
     private void handleStart(javafx.event.ActionEvent event) {
         SudokuDifficulty difficulty;
 
@@ -53,7 +78,7 @@ public class DifficultyMenuController {
         difficulty.apply(board);
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/SudokuGrid.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SudokuGrid.fxml"), LangManager.getBundle());
             Parent root = loader.load();
 
             SudokuGridController controller = loader.getController();
@@ -61,7 +86,7 @@ public class DifficultyMenuController {
 
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
-            stage.setTitle("Sudoku - Game");
+            stage.setTitle(LangManager.resources.getString("window.title.sudoku_game"));
 
             double size = 500;
             stage.setMinWidth(size);
@@ -70,7 +95,51 @@ public class DifficultyMenuController {
             stage.setHeight(size);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error while setting stage to SudokuGrid");
+            throw new SetStageException(LangManager.resources.getString("error.reading_boards"), e);
         }
     }
+
+    private void reloadUI() {
+        try {
+            String selectedDifficulty = null;
+            if (easyRadio.isSelected()) {
+                selectedDifficulty = "easy";
+            } else if (mediumRadio.isSelected()) {
+                selectedDifficulty = "medium";
+            } else if (hardRadio.isSelected()) {
+                selectedDifficulty = "hard";
+            }
+
+            Stage stage = (Stage) difficultyStackPane.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/DifficultyMenu.fxml"), LangManager.getBundle());
+            Parent root = loader.load();
+
+            stage.getScene().setRoot(root);
+            stage.setTitle(LangManager.resources.getString("title.difficulty.menu"));
+
+            DifficultyMenuController controller = loader.getController();
+            switch (Objects.requireNonNull(selectedDifficulty)) {
+                case "easy" -> controller.setSelectedDifficulty("easy");
+                case "medium" -> controller.setSelectedDifficulty("medium");
+                case "hard" -> controller.setSelectedDifficulty("hard");
+            }
+
+        } catch (IOException e) {
+            logger.error("Error reloading the UI");
+            throw new SetStageException(LangManager.resources.getString("error.reading_boards"), e);
+        }
+    }
+
+    private void setSelectedDifficulty(String difficulty) {
+        switch (difficulty) {
+            case "easy" -> easyRadio.setSelected(true);
+            case "medium" -> mediumRadio.setSelected(true);
+            case "hard" -> hardRadio.setSelected(true);
+        }
+    }
+
+
+
 }

@@ -8,7 +8,7 @@ public class LocalizationService {
     private static LocalizationService instance;
 
     private LocalizationService(Locale locale) {
-        this.bundle = ResourceBundle.getBundle("messages", locale);
+        this.bundle = ResourceBundle.getBundle("i18n.messages", locale);
     }
 
     public static void initialize(Locale locale) {

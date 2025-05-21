@@ -62,7 +62,7 @@ public class FileSudokuBoardDaoTest {
         Path testFile = tempDirectory.resolve("testBoard.txt");
         Files.createFile(testFile);
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             List<String> expectedList = new ArrayList<>();
             expectedList.add("testBoard.txt");
             assertEquals(expectedList, sudokuFile.names());
@@ -71,7 +71,7 @@ public class FileSudokuBoardDaoTest {
 
     @Test
     public void listNamesEmptyCase() {
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             List<String> expectedList = new ArrayList<>();
             assertEquals(expectedList, sudokuFile.names());
         } catch (Exception e) {
@@ -91,11 +91,11 @@ public class FileSudokuBoardDaoTest {
             }
         }
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             sudokuFile.write(testFile.getFileName().toString(), board);
         }
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
             assertEquals(board, loadedBoard);
         } catch (Exception e) {
@@ -111,11 +111,11 @@ public class FileSudokuBoardDaoTest {
 
         SudokuBoard board = getSudokuBoard();
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             sudokuFile.write(testFile.getFileName().toString(), board);
         }
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
             assertEquals(board, loadedBoard);
         }
@@ -157,7 +157,7 @@ public class FileSudokuBoardDaoTest {
             }
         }
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             sudokuFile.write(testFile.getFileName().toString(), board);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -181,11 +181,11 @@ public class FileSudokuBoardDaoTest {
             }
         }
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             sudokuFile.write(testFile.getFileName().toString(), board);
         }
 
-        try (Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString())) {
             SudokuBoard loadedBoard = sudokuFile.read(testFile.getFileName().toString());
             assertEquals(board.toString(), loadedBoard.toString());
         } catch (Exception e) {
@@ -197,7 +197,7 @@ public class FileSudokuBoardDaoTest {
 
     @Test
     public void closeMethodExplicit() throws Exception {
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> dao = DaoFactory.getFileDao(tempDirectory.toString())) {
             assertNotNull(dao);
         }
     }
@@ -206,7 +206,7 @@ public class FileSudokuBoardDaoTest {
     public void writeThrowsDaoExceptionWhenFileIsDirectory() throws Exception {
         Path subDir = Files.createTempDirectory(tempDirectory, "subDir");
 
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString())) {
+        try (Dao<SudokuBoard> dao = DaoFactory.getFileDao(tempDirectory.toString())) {
             SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
 
             assertThrows(DaoException.class, () ->
@@ -228,7 +228,7 @@ public class FileSudokuBoardDaoTest {
         Path badFile = tempDirectory.resolve("corruptedBoard.dat");
         Files.write(badFile, "not a serialized object".getBytes());
 
-        Dao<SudokuBoard> sudokuFile = SudokuBoardDaoFactory.getFileDao(tempDirectory.toString());
+        Dao<SudokuBoard> sudokuFile = DaoFactory.getFileDao(tempDirectory.toString());
         assertThrows(DaoReadException.class, () -> sudokuFile.read("corruptedBoard.dat"));
     }
 
@@ -238,15 +238,15 @@ public class FileSudokuBoardDaoTest {
         Path fakeDir = tempDirectory.resolve("notADir");
         Files.createFile(fakeDir); // create a file, not a directory
 
-        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao(fakeDir.toString())) {
+        try (Dao<SudokuBoard> dao = DaoFactory.getFileDao(fakeDir.toString())) {
             assertThrows(DaoException.class, dao::names);
         }
     }
 
     @Test
     public void factoryConstructorIsPrivate() throws Exception {
-        Constructor<SudokuBoardDaoFactory> constructor =
-                SudokuBoardDaoFactory.class.getDeclaredConstructor();
+        Constructor<DaoFactory> constructor =
+                DaoFactory.class.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         Exception exception = assertThrows(InvocationTargetException.class, constructor::newInstance);
