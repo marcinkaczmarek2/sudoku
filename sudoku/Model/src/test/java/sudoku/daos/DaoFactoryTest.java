@@ -7,7 +7,8 @@ import sudoku.daos.FileLockedSudokuBoardDao;
 import sudoku.exceptions.DaoException;
 import sudoku.models.LockedFieldsSudokuBoardDecorator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DaoFactoryTest {
 

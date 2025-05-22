@@ -1,8 +1,8 @@
 package sudoku.exceptions;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import sudoku.exceptions.DaoAccessException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DaoAccessExceptionTest {
 

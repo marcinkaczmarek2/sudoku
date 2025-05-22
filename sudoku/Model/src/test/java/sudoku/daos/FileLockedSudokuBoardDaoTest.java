@@ -8,13 +8,16 @@ import sudoku.exceptions.DaoReadException;
 import sudoku.exceptions.DaoWriteException;
 import sudoku.models.*;
 
-
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 class FileLockedSudokuBoardDaoTest {
 
@@ -50,7 +53,7 @@ class FileLockedSudokuBoardDaoTest {
 
 
     @Test
-    void testReadThrowsIOException() {
+    void testReadThrowsIoException() {
         String fileName = "non_existent.ser";
         assertThrows(DaoReadException.class, () -> dao.read(fileName));
     }
@@ -68,7 +71,7 @@ class FileLockedSudokuBoardDaoTest {
     }
 
     @Test
-    void testWriteThrowsIOException() throws Exception {
+    void testWriteThrowsIoException() throws Exception {
         String fileName = "invalid.ser";
         Path filePath = tempDir.resolve(fileName);
 

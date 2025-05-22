@@ -1,8 +1,9 @@
 package sudoku.exceptions;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import sudoku.exceptions.SudokuFieldCompareException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.AssertionsKt.assertNull;
 
 public class SudokuFieldCompareExceptionTest {
 

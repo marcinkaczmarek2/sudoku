@@ -1,8 +1,8 @@
 package sudoku.exceptions;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import sudoku.exceptions.SudokuFieldCloneException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SudokuFieldCloneExceptionTest {
 
