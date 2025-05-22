@@ -94,4 +94,15 @@ public class CloneExceptionTest {
         assertTrue(ex.getCause() instanceof CloneException);
         assertEquals("low-level cause", ex.getCause().getMessage());
     }
+
+    @Test
+    public void testDoCloneThrowsSudokuFieldCloneException() {
+        SudokuField field = new SudokuField();
+        field.setForceCloneException(true);
+
+        assertThrows(SudokuFieldCloneException.class, () -> {
+            field.doClone();
+        });
+    }
+
 }

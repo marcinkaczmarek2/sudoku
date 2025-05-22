@@ -2,15 +2,11 @@ package sudoku.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sudoku.exceptions.SudokuUnitCloneException;
 
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SudokuUnitTest {
@@ -137,4 +133,15 @@ public class SudokuUnitTest {
             assertEquals(original.fields[i].getFieldValue(), clone.fields[i].getFieldValue());
         }
     }
+
+    @Test
+    public void testDoCloneThrowsSudokuUnitCloneException() {
+        SudokuUnit unit = new SudokuRow();  // lub SudokuColumn/SudokuBox jeśli dziedziczą po SudokuUnit
+        unit.setForceCloneException(true);
+
+        assertThrows(SudokuUnitCloneException.class, () -> {
+            unit.doClone();
+        });
+    }
+
 }

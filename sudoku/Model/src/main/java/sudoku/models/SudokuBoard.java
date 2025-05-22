@@ -14,6 +14,7 @@ import java.util.Random;
 
 public class SudokuBoard implements Serializable, Cloneable {
     public static final int BOARD_SIZE = 9;
+    private boolean forceCloneException = false;
     protected List<SudokuField> board;
     private final transient SudokuSolver solver;
     private static final Logger logger = LoggerFactory.getLogger(SudokuBoard.class.getName());
@@ -27,6 +28,10 @@ public class SudokuBoard implements Serializable, Cloneable {
         board = new ArrayList<>(Arrays.asList(fields));
 
         this.solver = solver;
+    }
+
+    public void setForceCloneException(boolean forceCloneException) {
+        this.forceCloneException = forceCloneException;
     }
 
     public void solveGame() {
@@ -139,6 +144,9 @@ public class SudokuBoard implements Serializable, Cloneable {
 
     protected SudokuBoard doClone() throws SudokuBoardCloneException {
         try {
+            if (forceCloneException) {               // <-- wymuszamy wyjątek jeśli flaga true
+                throw new CloneNotSupportedException("Forced exception for testing");
+            }
             return (SudokuBoard) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new SudokuBoardCloneException(LocalizationService.getInstance().get("error.board_clone"), e);

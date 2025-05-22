@@ -10,6 +10,12 @@ import java.util.HashSet;
 
 public abstract class SudokuUnit implements Cloneable {
     protected SudokuField[] fields;
+    private boolean forceCloneException = false;
+
+    public void setForceCloneException(boolean forceCloneException) {
+        this.forceCloneException = forceCloneException;
+    }
+
 
     public SudokuUnit() {
         this.fields = new SudokuField[SudokuBoard.BOARD_SIZE];
@@ -61,6 +67,9 @@ public abstract class SudokuUnit implements Cloneable {
 
     protected SudokuUnit doClone() throws SudokuUnitCloneException {
         try {
+            if (forceCloneException) {      // <-- wymuszamy wyjątek jeśli flaga true
+                throw new CloneNotSupportedException("Forced exception for testing");
+            }
             return (SudokuUnit) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new SudokuUnitCloneException(LocalizationService.getInstance().get("error.unit_clone"), e);

@@ -1,0 +1,27 @@
+package sudoku.exceptions;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import sudoku.exceptions.SudokuFieldCompareException;
+
+public class SudokuFieldCompareExceptionTest {
+
+    @Test
+    void testConstructorWithMessageAndCause() {
+        String message = "Comparison error";
+        Throwable cause = new IllegalArgumentException("Invalid argument");
+        SudokuFieldCompareException ex = new SudokuFieldCompareException(message, cause);
+
+        assertEquals(message, ex.getMessage());
+        assertEquals(cause, ex.getCause());
+    }
+
+    @Test
+    void testConstructorWithMessageOnly() {
+        String message = "Comparison error";
+        SudokuFieldCompareException ex = new SudokuFieldCompareException(message);
+
+        assertEquals(message, ex.getMessage());
+        assertNull(ex.getCause());
+    }
+}

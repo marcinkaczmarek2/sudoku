@@ -20,18 +20,19 @@ public class FileLockedSudokuBoardDao extends AbstractFileDao<LockedFieldsSudoku
     }
 
     @Override
-    public LockedFieldsSudokuBoardDecorator read(String name) throws DaoException {
+    public LockedFieldsSudokuBoardDecorator read(String name) throws DaoReadException {
         Path fullFilePath = filePath.resolve(name);
         logger.debug("Trying to read board from file: {}", fullFilePath);
+
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fullFilePath.toFile()))) {
-            LockedFieldsSudokuBoardDecorator board = (LockedFieldsSudokuBoardDecorator) ois.readObject();
-            logger.info("Successfully read SudokuBoard from file: {}", fullFilePath);
-            return board;
-        } catch (IOException | ClassNotFoundException e) {
-            logger.error("Error reading SudokuBoard from file: {}", fullFilePath);
-            throw new DaoReadException(LocalizationService.getInstance().get("error.reading_boards"), e);
+            Object obj = ois.readObject();
+            return (LockedFieldsSudokuBoardDecorator) obj;
+        } catch (IOException | ClassNotFoundException | ClassCastException e) {
+            logger.error("Error reading SudokuBoard from file: {}", fullFilePath, e);
+            throw new DaoReadException("Could not read SudokuBoard from file", e);
         }
     }
+
 
     @Override
     public void write(String name, LockedFieldsSudokuBoardDecorator object) throws DaoException {

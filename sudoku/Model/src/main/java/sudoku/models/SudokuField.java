@@ -13,6 +13,12 @@ public class SudokuField implements Serializable, Comparable<SudokuField>, Clone
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+    private boolean forceCloneException = false;
+
+    public void setForceCloneException(boolean forceCloneException) {
+        this.forceCloneException = forceCloneException;
+    }
+
     public int getFieldValue() {
         return fieldValue;
     }
@@ -63,6 +69,9 @@ public class SudokuField implements Serializable, Comparable<SudokuField>, Clone
 
     protected SudokuField doClone() throws SudokuFieldCloneException {
         try {
+            if (forceCloneException) {
+                throw new CloneNotSupportedException("Forced exception for testing");
+            }
             return (SudokuField) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new SudokuFieldCloneException(LocalizationService.getInstance().get("error.field_clone"), e);

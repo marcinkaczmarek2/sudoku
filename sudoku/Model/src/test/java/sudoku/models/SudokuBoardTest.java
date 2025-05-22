@@ -2,15 +2,12 @@ package sudoku.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sudoku.exceptions.SudokuBoardCloneException;
 
 import java.util.HashSet;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SudokuBoardTest {
@@ -357,4 +354,26 @@ public class SudokuBoardTest {
             }
         }
     }
+
+    @Test
+    public void testDoCloneThrowsSudokuBoardCloneException() {
+        SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
+        board.setForceCloneException(true);
+
+        assertThrows(SudokuBoardCloneException.class, () -> {
+            board.doClone();
+        });
+    }
+
+
+    @Test
+    public void testGetField() {
+        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+
+        board.set(4, 5, 8);
+
+        assertEquals(8, board.getField(4, 5).getFieldValue(), "getField should return correct SudokuField value");
+    }
+
 }
