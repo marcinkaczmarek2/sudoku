@@ -2,6 +2,7 @@ package controllers;
 
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sudoku.daos.Dao;
 import sudoku.daos.DaoFactory;
+import sudoku.daos.JdbcSudokuBoardDao;
 import sudoku.exceptions.DaoException;
 import sudoku.exceptions.GuiException;
 import sudoku.models.LockedFieldsSudokuBoardDecorator;
@@ -23,9 +25,7 @@ import sudoku.models.SudokuBoard;
 import sudoku.models.SudokuField;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 public class SudokuGridController {
@@ -33,6 +33,7 @@ public class SudokuGridController {
     private final TextField[][] cells = new TextField[9][9];
     private SudokuBoard board;
     private Dao<LockedFieldsSudokuBoardDecorator> dao;
+    private Dao<LockedFieldsSudokuBoardDecorator> daoDB;
     private static final Logger logger = LoggerFactory.getLogger(SudokuGridController.class.getName());
 
     @FXML
@@ -81,6 +82,7 @@ public class SudokuGridController {
 
         try {
             dao = DaoFactory.getLockedFileDao("boards");
+            daoDB = DaoFactory.getJbcdFileDao();
         } catch (DaoException e) {
             logger.error("Error while creating getLockedFileDao");
         }
@@ -341,4 +343,80 @@ public class SudokuGridController {
         menuPl.setText(LangManager.resources.getString("menuitem.pl"));
         menuEn.setText(LangManager.resources.getString("menuitem.en"));
     }
+
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    @FXML
+    private void handleDBSave() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Zapisz planszę do bazy danych");
+        dialog.setHeaderText("Podaj nazwę planszy:");
+        dialog.setContentText("Nazwa:");
+
+        Set<Integer> lockedFields = new HashSet<>();
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                if (!cells[row][col].isEditable()) {
+                    lockedFields.add(row * 9 + col);
+                }
+            }
+        }
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> {
+            try {
+                daoDB.write(name, new LockedFieldsSudokuBoardDecorator(board, lockedFields)); // board – aktualna plansza do zapisania
+                showAlert("Sukces", "Plansza została zapisana jako: " + name);
+            } catch (DaoException e) {
+                showAlert("Błąd", "Nie udało się zapisać planszy: " + e.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void handleDBLoad(ActionEvent event) {
+        try {
+            List<String> boardNames = daoDB.names();
+
+            if (boardNames.isEmpty()) {
+                showAlert("Informacja", "Brak zapisanych plansz w bazie danych.");
+                return;
+            }
+
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(boardNames.get(0), boardNames);
+            dialog.setTitle("Wczytaj planszę z bazy danych");
+            dialog.setHeaderText("Wybierz planszę do wczytania:");
+            dialog.setContentText("Nazwa:");
+
+
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(name -> {
+                try {
+                    LockedFieldsSudokuBoardDecorator loaded = daoDB.read(name);
+                    setBoard(loaded.getBoard());
+                    for (Integer index : loaded.getLockedFieldIndexes()) {
+                        int row = index / 9;
+                        int col = index % 9;
+
+                        cells[row][col].setEditable(false);
+                        cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: whitesmoke;");
+                    }
+                    showAlert("Sukces", "Plansza '" + name + "' została wczytana.");
+                } catch (DaoException e) {
+                    showAlert("Błąd", "Nie udało się wczytać planszy: " + e.getMessage());
+                }
+            });
+        } catch (DaoException e) {
+            showAlert("Błąd", "Nie udało się pobrać listy plansz: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 }

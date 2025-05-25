@@ -9,11 +9,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.VBox?>
-<VBox xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controllers.SudokuGridController" prefHeight="600.0" prefWidth="800.0" spacing="0">
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SudokuGridController">
 
     <MenuBar>
         <menus>
@@ -23,6 +22,12 @@
                     <MenuItem fx:id="menuLoad" mnemonicParsing="false" onAction="#handleLoad" text="%menu.load" />
                 </items>
             </Menu>
+         <Menu fx:id="menuFile1" mnemonicParsing="false" text="%menu.database">
+            <items>
+               <MenuItem fx:id="menuDBSave" mnemonicParsing="false" onAction="#handleDBSave" text="%menu.save" />
+               <MenuItem fx:id="menuDBLoad" mnemonicParsing="false" onAction="#handleDBLoad" text="%menu.load" />
+            </items>
+         </Menu>
             <Menu fx:id="menuLanguage" mnemonicParsing="false" text="%menu.language">
                 <items>
                     <MenuItem fx:id="menuEn" mnemonicParsing="false" onAction="#handleLangEn" text="%menuitem.en" />
@@ -34,7 +39,7 @@
 
     <StackPane fx:id="container" VBox.vgrow="ALWAYS">
         <padding>
-            <Insets top="20.0" bottom="20.0" left="20.0" right="20.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
         </padding>
         <GridPane fx:id="sudokuGrid" gridLinesVisible="true" maxHeight="1000.0" maxWidth="1000.0">
             <columnConstraints>

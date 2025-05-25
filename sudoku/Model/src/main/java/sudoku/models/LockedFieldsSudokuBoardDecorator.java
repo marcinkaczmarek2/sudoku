@@ -23,4 +23,8 @@ public class LockedFieldsSudokuBoardDecorator implements Serializable {
     public boolean isLocked(int row, int col) {
         return lockedFieldIndexes.contains(row * 9 + col);
     }
+
+    public boolean isLockedByIndex(int index) {
+        return lockedFieldIndexes.contains(index);
+    }
 }

@@ -49,6 +49,18 @@ public class SudokuBoard implements Serializable, Cloneable {
         board.get(x * 9 + y).setFieldValue(value);
     }
 
+    public void setByIndex(int index, int value) {
+        int row = index / BOARD_SIZE;
+        int col = index % BOARD_SIZE;
+        set(row, col, value);
+    }
+
+    public int getByIndex(int index) {
+        int row = index / BOARD_SIZE;
+        int col = index % BOARD_SIZE;
+        return get(row, col);
+    }
+
     public boolean checkBoard() {
         boolean boardCorrectness = true;
         for (int i = 0; i < 9; i++) {

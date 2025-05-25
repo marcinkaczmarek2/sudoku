@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_DB: sudokuDB
+      POSTGRES_USER: sudokuPlayer
+      POSTGRES_PASSWORD: 123
+      POSTGRES_LISTEN_ADDRESSES: '*'
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  pgdata:

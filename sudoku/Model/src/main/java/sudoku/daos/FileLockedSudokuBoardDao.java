@@ -29,7 +29,7 @@ public class FileLockedSudokuBoardDao extends AbstractFileDao<LockedFieldsSudoku
             return (LockedFieldsSudokuBoardDecorator) obj;
         } catch (IOException | ClassNotFoundException | ClassCastException e) {
             logger.error("Error reading SudokuBoard from file: {}", fullFilePath, e);
-            throw new DaoReadException("Could not read SudokuBoard from file", e);
+            throw new DaoReadException(LocalizationService.getInstance().get("error.reading_boards"), e);
         }
     }
 
