@@ -22,7 +22,7 @@ public class JdbcSudokuBoardDao implements Dao<LockedFieldsSudokuBoardDecorator>
     public JdbcSudokuBoardDao() throws DaoException {
         try {
             connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost/", userName, userPassword);
+                    "jdbc:postgresql://localhost/sudokuDB", userName, userPassword);
             connection.setAutoCommit(false);
             logger.info("Successfully connected to the database.");
         } catch (SQLException e) {
