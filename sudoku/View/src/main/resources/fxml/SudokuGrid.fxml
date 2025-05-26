@@ -22,10 +22,10 @@
                     <MenuItem fx:id="menuLoad" mnemonicParsing="false" onAction="#handleLoad" text="%menu.load" />
                 </items>
             </Menu>
-         <Menu fx:id="menuFile1" mnemonicParsing="false" text="%menu.database">
+         <Menu fx:id="menuDbFile" mnemonicParsing="false" text="%menu.database">
             <items>
-               <MenuItem fx:id="menuDBSave" mnemonicParsing="false" onAction="#handleDBSave" text="%menu.save" />
-               <MenuItem fx:id="menuDBLoad" mnemonicParsing="false" onAction="#handleDBLoad" text="%menu.load" />
+               <MenuItem fx:id="menuDbSave" mnemonicParsing="false" onAction="#handleDbSave" text="%menu.save" />
+               <MenuItem fx:id="menuDbLoad" mnemonicParsing="false" onAction="#handleDbLoad" text="%menu.load" />
             </items>
          </Menu>
             <Menu fx:id="menuLanguage" mnemonicParsing="false" text="%menu.language">

@@ -1,5 +1,7 @@
 package managers;
 
+import sudoku.models.LocalizationService;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -12,5 +14,6 @@ public class LangManager {
 
     public static void setLocale(Locale locale) {
         resources = ResourceBundle.getBundle("i18n.labels", locale);
+        LocalizationService.initialize(locale);
     }
 }

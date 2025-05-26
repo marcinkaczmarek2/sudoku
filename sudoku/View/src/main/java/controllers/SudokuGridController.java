@@ -2,14 +2,12 @@ package controllers;
 
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import managers.LangManager;
@@ -17,14 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sudoku.daos.Dao;
 import sudoku.daos.DaoFactory;
-import sudoku.daos.JdbcSudokuBoardDao;
 import sudoku.exceptions.DaoException;
 import sudoku.exceptions.GuiException;
 import sudoku.models.LockedFieldsSudokuBoardDecorator;
 import sudoku.models.SudokuBoard;
 import sudoku.models.SudokuField;
 
-import java.io.File;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
@@ -44,6 +40,15 @@ public class SudokuGridController {
 
     @FXML
     private Menu menuFile;
+
+    @FXML
+    private Menu menuDbFile;
+
+    @FXML
+    private MenuItem menuDbSave;
+
+    @FXML
+    private MenuItem menuDbLoad;
 
     @FXML
     private Menu menuLanguage;
@@ -85,68 +90,6 @@ public class SudokuGridController {
             daoDB = DaoFactory.getJbcdFileDao();
         } catch (DaoException e) {
             logger.error("Error while creating getLockedFileDao");
-        }
-    }
-
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
-    @FXML
-    private void handleSave() {
-        if (board == null) {
-            return;
-        }
-
-        TextInputDialog dialog = new TextInputDialog(LangManager.resources.getString("dialog.new.puzzle"));
-        dialog.setTitle(LangManager.resources.getString("dialog.save.title"));
-        dialog.setHeaderText(LangManager.resources.getString("dialog.save.header"));
-        dialog.setContentText(LangManager.resources.getString("dialog.save.content"));
-
-        dialog.showAndWait().ifPresent(fileName -> {
-            if (!fileName.endsWith(".sudoku")) {
-                fileName += ".sudoku";
-            }
-
-            Set<Integer> lockedFields = new HashSet<>();
-            for (int row = 0; row < 9; row++) {
-                for (int col = 0; col < 9; col++) {
-                    if (!cells[row][col].isEditable()) {
-                        lockedFields.add(row * 9 + col);
-                    }
-                }
-            }
-
-            try {
-                dao.write(fileName, new LockedFieldsSudokuBoardDecorator(board, lockedFields));
-            } catch (DaoException e) {
-                logger.error("Error while saving LockedFieldSudokuBoard to {}", fileName);
-            }
-        });
-    }
-
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
-    @FXML
-    private void handleLoad() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(LangManager.resources.getString("dialog.load.title"));
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(LangManager.resources
-                        .getString("dialog.load.extension_filter"), "*.sudoku")
-        );
-        File file = fileChooser.showOpenDialog(container.getScene().getWindow());
-
-        if (file != null) {
-            try {
-                LockedFieldsSudokuBoardDecorator loaded = dao.read(file.getName());
-                setBoard(loaded.getBoard());
-                for (Integer index : loaded.getLockedFieldIndexes()) {
-                    int row = index / 9;
-                    int col = index % 9;
-
-                    cells[row][col].setEditable(false);
-                    cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: whitesmoke;");
-                }
-            } catch (DaoException e) {
-                logger.error("Error while loading LockedFieldSudokuBoard from {}", file);
-            }
         }
     }
 
@@ -232,6 +175,18 @@ public class SudokuGridController {
                     cells[row][col].setEditable(false);
                     cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: whitesmoke;");
                 }
+            }
+        }
+    }
+
+    private void resetEditableFields() {
+        if (board == null) {
+            return;
+        }
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                cells[row][col].setEditable(true);
+                cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: white;");
             }
         }
     }
@@ -342,50 +297,113 @@ public class SudokuGridController {
         menuLoad.setText(LangManager.resources.getString("menu.load"));
         menuPl.setText(LangManager.resources.getString("menuitem.pl"));
         menuEn.setText(LangManager.resources.getString("menuitem.en"));
+        menuDbFile.setText(LangManager.resources.getString("menu.database"));
+        menuDbLoad.setText(LangManager.resources.getString("menu.load"));
+        menuDbSave.setText(LangManager.resources.getString("menu.save"));
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleDBSave() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Zapisz planszę do bazy danych");
-        dialog.setHeaderText("Podaj nazwę planszy:");
-        dialog.setContentText("Nazwa:");
-
-        Set<Integer> lockedFields = new HashSet<>();
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-                if (!cells[row][col].isEditable()) {
-                    lockedFields.add(row * 9 + col);
-                }
-            }
+    private void handleSave() {
+        if (board == null) {
+            return;
         }
 
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(name -> {
+        TextInputDialog dialog = new TextInputDialog(LangManager.resources.getString("dialog.new.puzzle"));
+        dialog.setTitle(LangManager.resources.getString("dialog.save.title"));
+        dialog.setHeaderText(LangManager.resources.getString("dialog.save.header"));
+        dialog.setContentText(LangManager.resources.getString("dialog.save.content"));
+
+        dialog.showAndWait().ifPresent(fileName -> {
+            if (!fileName.endsWith(".sudoku")) {
+                fileName += ".sudoku";
+            }
+
             try {
-                daoDB.write(name, new LockedFieldsSudokuBoardDecorator(board, lockedFields)); // board – aktualna plansza do zapisania
-                showAlert("Sukces", "Plansza została zapisana jako: " + name);
+                dao.write(fileName, new LockedFieldsSudokuBoardDecorator(board, saveLockedFields()));
+                showAlert("alert.save.success.title", "alert.save.success.message");
             } catch (DaoException e) {
-                showAlert("Błąd", "Nie udało się zapisać planszy: " + e.getMessage());
+                showAlert("alert.save.error.title","alert.save.error.message" + e.getMessage());
+                logger.error("Error while saving LockedFieldSudokuBoard to {}", fileName);
             }
         });
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleDBLoad(ActionEvent event) {
+    private void handleLoad() {
         try {
-            List<String> boardNames = daoDB.names();
+
+            List<String> boardNames = dao.names();
 
             if (boardNames.isEmpty()) {
-                showAlert("Informacja", "Brak zapisanych plansz w bazie danych.");
+                showAlert("alert.load.info.title", "alert.load.info.message");
                 return;
             }
 
             ChoiceDialog<String> dialog = new ChoiceDialog<>(boardNames.get(0), boardNames);
-            dialog.setTitle("Wczytaj planszę z bazy danych");
-            dialog.setHeaderText("Wybierz planszę do wczytania:");
-            dialog.setContentText("Nazwa:");
+            dialog.setTitle(LangManager.resources.getString("dialog.load.title"));
+            dialog.setHeaderText(LangManager.resources.getString("dialog.db_load.header"));
+            dialog.setContentText(LangManager.resources.getString("dialog.db_load.content"));
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(name -> {
+                try {
+                    LockedFieldsSudokuBoardDecorator loaded = dao.read(name);
+                    setBoard(loaded.getBoard());
+                    resetEditableFields();
+                    loadLockedFields(loaded.getLockedFieldIndexes());
+                    showAlert("alert.load.success.title", "alert.load.success.message");
+                } catch (DaoException e) {
+                    logger.error("Error while loading LockedFieldSudokuBoard from boards file");
+                    showAlert("alert.load.error.title", "alert.load.error.message" + e.getMessage());
+                }
+            });
+        } catch (DaoException e) {
+            logger.error("Error while loading LockedFieldSudokuBoard names from boards file.");
+            showAlert("alert.load.error.title", "alert.load.fetch_list_error.message" + e.getMessage());
+        }
+    }
+
+
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    @FXML
+    private void handleDbSave() {
+        if (board == null) {
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog(LangManager.resources.getString("dialog.new.puzzle"));
+        dialog.setTitle(LangManager.resources.getString("dialog.db_save.title"));
+        dialog.setHeaderText(LangManager.resources.getString("dialog.db_save.header"));
+        dialog.setContentText(LangManager.resources.getString("dialog.db_save.content"));
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> {
+            try {
+                daoDB.write(name, new LockedFieldsSudokuBoardDecorator(board, saveLockedFields()));
+                showAlert("alert.save.success.title", "alert.save.success.message");
+            } catch (DaoException e) {
+                showAlert("alert.save.error.title", "alert.save.error.message" + e.getMessage());
+                logger.error("Error while saving LockedFieldSudokuBoard as {}", name);
+            }
+        });
+    }
+
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    @FXML
+    private void handleDbLoad() {
+        try {
+            List<String> boardNames = daoDB.names();
+
+            if (boardNames.isEmpty()) {
+                showAlert("alert.load.info.title", "alert.load.info.message");
+                return;
+            }
+
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(boardNames.get(0), boardNames);
+            dialog.setTitle(LangManager.resources.getString("dialog.db_load.title"));
+            dialog.setHeaderText(LangManager.resources.getString("dialog.db_load.header"));
+            dialog.setContentText(LangManager.resources.getString("dialog.db_load.content"));
 
 
             Optional<String> result = dialog.showAndWait();
@@ -393,28 +411,47 @@ public class SudokuGridController {
                 try {
                     LockedFieldsSudokuBoardDecorator loaded = daoDB.read(name);
                     setBoard(loaded.getBoard());
-                    for (Integer index : loaded.getLockedFieldIndexes()) {
-                        int row = index / 9;
-                        int col = index % 9;
-
-                        cells[row][col].setEditable(false);
-                        cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: whitesmoke;");
-                    }
-                    showAlert("Sukces", "Plansza '" + name + "' została wczytana.");
+                    resetEditableFields();
+                    loadLockedFields(loaded.getLockedFieldIndexes());
+                    showAlert("alert.load.success.title", "alert.load.success.message");
                 } catch (DaoException e) {
-                    showAlert("Błąd", "Nie udało się wczytać planszy: " + e.getMessage());
+                    logger.error("Error while loading LockedFieldSudokuBoard from Database table field named {}", name);
+                    showAlert("alert.load.error.title", "alert_db.load.error.message" + e.getMessage());
                 }
             });
         } catch (DaoException e) {
-            showAlert("Błąd", "Nie udało się pobrać listy plansz: " + e.getMessage());
+            logger.error("Error while loading LockedFieldSudokuBoard names from database.");
+            showAlert("alert.load.error.title", "alert.load.fetch_list_error.message" + e.getMessage());
+        }
+    }
+
+    private Set<Integer> saveLockedFields() {
+        Set<Integer> lockedFields = new HashSet<>();
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                if (!cells[row][col].getText().isEmpty()) {
+                    lockedFields.add(row * 9 + col);
+                }
+            }
+        }
+        return lockedFields;
+    }
+
+    private void loadLockedFields(Set<Integer> lockedFields) {
+        for (Integer index : lockedFields) {
+            int row = index / 9;
+            int col = index % 9;
+
+            cells[row][col].setEditable(false);
+            cells[row][col].setStyle(cells[row][col].getStyle() + "; -fx-background-color: whitesmoke;");
         }
     }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+        alert.setTitle(LangManager.resources.getString(title));
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(LangManager.resources.getString(message));
         alert.showAndWait();
     }
 
