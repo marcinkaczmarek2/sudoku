@@ -31,8 +31,8 @@ public class JdbcSudokuBoardDao implements Dao<LockedFieldsSudokuBoardDecorator>
         }
     }
 
-    // Added constructor for injecting mock connection (for tests)
-    public JdbcSudokuBoardDao(Connection connection) {
+    // New constructor for test injection of Connection
+    JdbcSudokuBoardDao(Connection connection) {
         this.connection = connection;
     }
 
@@ -75,7 +75,6 @@ public class JdbcSudokuBoardDao implements Dao<LockedFieldsSudokuBoardDecorator>
                     }
                 }
             }
-
 
             SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
             for (Map.Entry<Integer, Integer> entry : fieldValues.entrySet()) {
