@@ -31,6 +31,11 @@ public class JdbcSudokuBoardDao implements Dao<LockedFieldsSudokuBoardDecorator>
         }
     }
 
+    // Added constructor for injecting mock connection (for tests)
+    public JdbcSudokuBoardDao(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public LockedFieldsSudokuBoardDecorator read(String name) throws DaoReadException {
         logger.debug("Attempting to read Sudoku board '{}' from database.", name);

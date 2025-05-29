@@ -380,4 +380,19 @@ public class SudokuBoardTest {
         assertEquals(8, board.getField(4, 5).getFieldValue(), "getField should return correct SudokuField value");
     }
 
+    private final SudokuSolver dummySolver = board -> {};
+
+    @Test
+    void testSetAndGetByIndex() {
+        SudokuBoard board = new SudokuBoard(dummySolver);
+
+        board.setByIndex(10, 7);
+        assertEquals(7, board.getByIndex(10));
+
+        board.setByIndex(80, 9);
+        assertEquals(9, board.getByIndex(80));
+
+        board.setByIndex(0, 5);
+        assertEquals(5, board.getByIndex(0));
+    }
 }
