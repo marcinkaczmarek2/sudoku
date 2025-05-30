@@ -1,0 +1,8 @@
+2025-05-30 10:32:52.845 [JavaFX Application Thread] DEBUG sudoku.models.SudokuBoard - Starting to solve the Sudoku board.
+2025-05-30 10:32:52.880 [JavaFX Application Thread] INFO  sudoku.models.SudokuBoard - Successfully solved the Sudoku board.
+2025-05-30 10:32:52.999 [JavaFX Application Thread] DEBUG s.daos.FileLockedSudokuBoardDao - FileLockedSudokuBoardDao initialized with path: boards
+2025-05-30 10:32:53.000 [JavaFX Application Thread] ERROR c.DifficultyMenuController - Error while setting stage to SudokuGrid
+2025-05-30 10:32:56.815 [JavaFX Application Thread] DEBUG sudoku.models.SudokuBoard - Starting to solve the Sudoku board.
+2025-05-30 10:32:56.823 [JavaFX Application Thread] INFO  sudoku.models.SudokuBoard - Successfully solved the Sudoku board.
+2025-05-30 10:32:56.899 [JavaFX Application Thread] DEBUG s.daos.FileLockedSudokuBoardDao - FileLockedSudokuBoardDao initialized with path: boards
+2025-05-30 10:32:56.899 [JavaFX Application Thread] ERROR c.DifficultyMenuController - Error while setting stage to SudokuGrid
