@@ -1,6 +1,5 @@
 package sudoku.daos;
 
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.*;
 import sudoku.exceptions.DaoException;
 import sudoku.exceptions.DaoReadException;
@@ -9,13 +8,12 @@ import sudoku.models.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
-import org.easymock.EasyMock;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JdbcSudokuBoardDaoTest {
@@ -115,19 +113,20 @@ public class JdbcSudokuBoardDaoTest {
         connection.createStatement().executeUpdate("DELETE FROM SudokuBoardDB WHERE name = '" + name + "'");
 
         // Second insert will recreate the board and should succeed
-        assertDoesNotThrow(() -> dao.write(name, createLockedBoard()));
+        Assertions.assertDoesNotThrow(() -> dao.write(name, createLockedBoard()));
     }
 
     @Test
     void testCloseDoesNotThrow() {
-        assertDoesNotThrow(() -> {
+        Assertions.assertDoesNotThrow(() -> {
             JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
             dao.close();
         });
     }
+
     @Test
     void testDefaultConstructorEstablishesConnection() {
-        assertDoesNotThrow(() -> {
+        Assertions.assertDoesNotThrow(() -> {
             JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(); // Calls the real constructor
             dao.close(); // Ensure the connection is closed to avoid leaks
         });

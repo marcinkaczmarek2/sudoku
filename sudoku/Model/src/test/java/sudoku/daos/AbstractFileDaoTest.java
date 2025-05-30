@@ -1,20 +1,19 @@
 package sudoku.daos;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import sudoku.exceptions.DaoAccessException;
 import sudoku.exceptions.DaoException;
 import sudoku.models.LocalizationService;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
 
 public class AbstractFileDaoTest {
 
@@ -52,7 +51,7 @@ public class AbstractFileDaoTest {
         Path tempDir = Files.createTempDirectory("testDir");
         Path newDir = tempDir.resolve("newDir");
 
-        assertFalse(Files.exists(newDir));
+        Assertions.assertFalse(Files.exists(newDir));
 
         AbstractFileDao.ensureDirectoryExists(newDir);
 
@@ -82,11 +81,12 @@ public class AbstractFileDaoTest {
         Files.deleteIfExists(tempDir.resolve("file2.txt"));
         Files.deleteIfExists(tempDir);
     }
+
     @Test
     void testCloseLogsInfo() throws Exception {
         LocalizationService.initialize(Locale.ENGLISH);
         ConcreteFileDao dao = new ConcreteFileDao(Files.createTempDirectory("closeTest").toString());
 
-        assertDoesNotThrow(() -> dao.close());
+        Assertions.assertDoesNotThrow(() -> dao.close());
     }
 }

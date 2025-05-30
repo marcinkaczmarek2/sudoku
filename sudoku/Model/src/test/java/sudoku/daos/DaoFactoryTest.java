@@ -1,16 +1,17 @@
 package sudoku.daos;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import sudoku.daos.Dao;
-import sudoku.daos.DaoFactory;
-import sudoku.daos.FileLockedSudokuBoardDao;
 import sudoku.exceptions.DaoException;
 import sudoku.models.LockedFieldsSudokuBoardDecorator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
+
 
 class DaoFactoryTest {
 
@@ -19,13 +20,14 @@ class DaoFactoryTest {
         String tempDir = System.getProperty("java.io.tmpdir");
         Dao<LockedFieldsSudokuBoardDecorator> dao = DaoFactory.getLockedFileDao(tempDir);
         assertNotNull(dao);
-        assertInstanceOf(FileLockedSudokuBoardDao.class, dao);
+        Assertions.assertInstanceOf(FileLockedSudokuBoardDao.class, dao);
     }
+
     @Test
     void testGetJdbcFileDao() throws DaoException {
         Dao<LockedFieldsSudokuBoardDecorator> dao = DaoFactory.getJbcdFileDao();
         assertNotNull(dao);
-        assertEquals("class sudoku.daos.JdbcSudokuBoardDao", dao.getClass().toString());
+        Assertions.assertEquals("class sudoku.daos.JdbcSudokuBoardDao", dao.getClass().toString());
     }
 
     @Test
@@ -42,6 +44,6 @@ class DaoFactoryTest {
         Throwable cause = thrown.getCause();
         assertNotNull(cause);
         assertTrue(cause instanceof UnsupportedOperationException);
-        assertEquals("Utility class", cause.getMessage());
+        Assertions.assertEquals("Utility class", cause.getMessage());
     }
 }
