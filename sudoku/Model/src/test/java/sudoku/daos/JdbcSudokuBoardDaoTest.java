@@ -38,7 +38,7 @@ public class JdbcSudokuBoardDaoTest {
     @AfterEach
     void rollbackAndClose() throws SQLException {
         if (connection != null && !connection.isClosed()) {
-            connection.rollback();  // Rollback for test isolation
+            connection.rollback();
             connection.close();
         }
     }
@@ -48,7 +48,6 @@ public class JdbcSudokuBoardDaoTest {
         SudokuBoard board = new SudokuBoard(solver);
         board.solveGame();
 
-        // Lock every third cell for test purposes
         Set<Integer> lockedIndexes = new HashSet<>();
         for (int i = 0; i < 81; i += 3) {
             lockedIndexes.add(i);
@@ -86,7 +85,7 @@ public class JdbcSudokuBoardDaoTest {
         LockedFieldsSudokuBoardDecorator board = createLockedBoard();
 
         dao.write(name, board);
-        dao.write(name, board);  // Overwriting is allowed in your DAO
+        dao.write(name, board);
     }
 
     @Test
@@ -106,13 +105,10 @@ public class JdbcSudokuBoardDaoTest {
         JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
         String name = "rollback-board";
 
-        // First insert should succeed
         dao.write(name, createLockedBoard());
 
-        // Simulate failure: insert corrupt data directly
         connection.createStatement().executeUpdate("DELETE FROM SudokuBoardDB WHERE name = '" + name + "'");
 
-        // Second insert will recreate the board and should succeed
         Assertions.assertDoesNotThrow(() -> dao.write(name, createLockedBoard()));
     }
 
@@ -127,8 +123,8 @@ public class JdbcSudokuBoardDaoTest {
     @Test
     void testDefaultConstructorEstablishesConnection() {
         Assertions.assertDoesNotThrow(() -> {
-            JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(); // Calls the real constructor
-            dao.close(); // Ensure the connection is closed to avoid leaks
+            JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao();
+            dao.close();
         });
     }
 }

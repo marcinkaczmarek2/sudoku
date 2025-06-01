@@ -66,7 +66,6 @@ public class AbstractFileDaoTest {
         LocalizationService.initialize(Locale.ENGLISH);
         Path tempDir = Files.createTempDirectory("testNamesDir");
 
-        // Create dummy files
         Files.createFile(tempDir.resolve("file1.txt"));
         Files.createFile(tempDir.resolve("file2.txt"));
 
@@ -76,7 +75,6 @@ public class AbstractFileDaoTest {
         assertTrue(names.contains("file1.txt"));
         assertTrue(names.contains("file2.txt"));
 
-        // Cleanup
         Files.deleteIfExists(tempDir.resolve("file1.txt"));
         Files.deleteIfExists(tempDir.resolve("file2.txt"));
         Files.deleteIfExists(tempDir);

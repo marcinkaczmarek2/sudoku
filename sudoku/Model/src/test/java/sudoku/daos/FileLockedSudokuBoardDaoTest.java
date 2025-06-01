@@ -37,9 +37,9 @@ class FileLockedSudokuBoardDaoTest {
         String fileName = "testBoard.ser";
 
         SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
-        board.solveGame(); // Rozwiązanie planszy
+        board.solveGame();
 
-        board.set(0, 0, 5); // Opcjonalna zmiana, by dodać "unikalność"
+        board.set(0, 0, 5);
         LockedFieldsSudokuBoardDecorator originalBoard = new LockedFieldsSudokuBoardDecorator(board, Set.of(0));
 
         dao.write(fileName, originalBoard);
@@ -86,6 +86,6 @@ class FileLockedSudokuBoardDaoTest {
 
         assertThrows(DaoWriteException.class, () -> dao.write(fileName, lockedBoard));
 
-        file.setWritable(true); // cleanup
+        file.setWritable(true);
     }
 }

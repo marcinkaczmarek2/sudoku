@@ -21,7 +21,6 @@ public class GuiExceptionTest {
         Throwable cause = new RuntimeException("Cause exception");
         GuiException ex = new GuiException(cause);
         assertEquals(cause, ex.getCause());
-        // Message might be cause.toString() by default
         assertTrue(ex.getMessage().contains("Cause exception"));
     }
 

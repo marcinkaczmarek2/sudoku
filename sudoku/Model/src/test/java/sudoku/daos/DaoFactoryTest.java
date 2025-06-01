@@ -40,7 +40,6 @@ class DaoFactoryTest {
                 () -> constructor.newInstance()
         );
 
-        // unwrap the cause to assert the UnsupportedOperationException
         Throwable cause = thrown.getCause();
         assertNotNull(cause);
         assertTrue(cause instanceof UnsupportedOperationException);
