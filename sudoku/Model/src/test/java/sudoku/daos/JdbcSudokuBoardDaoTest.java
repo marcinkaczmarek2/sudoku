@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,30 +59,35 @@ public class JdbcSudokuBoardDaoTest {
 
     @Test
     void testWriteAndReadBoard() throws DaoException {
-        JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
-        LockedFieldsSudokuBoardDecorator original = createLockedBoard();
-        String name = "test-board";
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)) {
+            LockedFieldsSudokuBoardDecorator original = createLockedBoard();
+            String name = "test-board";
 
-        dao.write(name, original);
-        LockedFieldsSudokuBoardDecorator loaded = dao.read(name);
+            dao.write(name, original);
+            LockedFieldsSudokuBoardDecorator loaded = dao.read(name);
 
-        assertEquals(original.getBoard(), loaded.getBoard(), "Board values should match");
-        for (int i = 0; i < 81; i++) {
-            assertEquals(original.isLockedByIndex(i), loaded.isLockedByIndex(i),
-                    "Locked state should match for index " + i);
+            assertNotSame(original, loaded);
+            assertNotSame(original.getBoard(), loaded.getBoard());
+
+
+            assertEquals(original.getBoard(), loaded.getBoard(), "Board values should match");
+            for (int i = 0; i < 81; i++) {
+                assertEquals(original.isLockedByIndex(i), loaded.isLockedByIndex(i),
+                        "Locked state should match for index " + i);
+            }
         }
     }
 
     @Test
     void testReadNonexistentBoardThrows() throws DaoException {
-        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)) {
             assertThrows(DaoReadException.class, () -> dao.read("nonexistent-board"));
         }
     }
 
     @Test
     void testWriteDuplicateBoardNameDoesNotThrow() throws DaoException {
-        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)) {
             String name = "duplicate-board";
             LockedFieldsSudokuBoardDecorator board = createLockedBoard();
 
@@ -92,7 +98,7 @@ public class JdbcSudokuBoardDaoTest {
 
     @Test
     void testNamesReturnsSavedBoards() throws DaoException {
-        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)) {
             dao.write("first", createLockedBoard());
             dao.write("second", createLockedBoard());
 
@@ -104,7 +110,7 @@ public class JdbcSudokuBoardDaoTest {
 
     @Test
     void testRollbackOnWriteFailure() throws SQLException, DaoException {
-        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)) {
             String name = "rollback-board";
 
             dao.write(name, createLockedBoard());
