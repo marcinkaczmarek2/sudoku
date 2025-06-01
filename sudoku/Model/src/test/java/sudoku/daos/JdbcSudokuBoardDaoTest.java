@@ -73,43 +73,47 @@ public class JdbcSudokuBoardDaoTest {
     }
 
     @Test
-    void testReadNonexistentBoardThrows() {
-        JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
-        assertThrows(DaoReadException.class, () -> dao.read("nonexistent-board"));
+    void testReadNonexistentBoardThrows() throws DaoException {
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+            assertThrows(DaoReadException.class, () -> dao.read("nonexistent-board"));
+        }
     }
 
     @Test
     void testWriteDuplicateBoardNameDoesNotThrow() throws DaoException {
-        JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
-        String name = "duplicate-board";
-        LockedFieldsSudokuBoardDecorator board = createLockedBoard();
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+            String name = "duplicate-board";
+            LockedFieldsSudokuBoardDecorator board = createLockedBoard();
 
-        dao.write(name, board);
-        dao.write(name, board);
+            dao.write(name, board);
+            dao.write(name, board);
+        }
     }
 
     @Test
     void testNamesReturnsSavedBoards() throws DaoException {
-        JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+            dao.write("first", createLockedBoard());
+            dao.write("second", createLockedBoard());
 
-        dao.write("first", createLockedBoard());
-        dao.write("second", createLockedBoard());
-
-        List<String> names = dao.names();
-        assertTrue(names.contains("first"));
-        assertTrue(names.contains("second"));
+            List<String> names = dao.names();
+            assertTrue(names.contains("first"));
+            assertTrue(names.contains("second"));
+        }
     }
 
     @Test
-    void testRollbackOnWriteFailure() throws SQLException, DaoWriteException {
-        JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection);
-        String name = "rollback-board";
+    void testRollbackOnWriteFailure() throws SQLException, DaoException {
+        try (JdbcSudokuBoardDao dao = new JdbcSudokuBoardDao(connection)){
+            String name = "rollback-board";
 
-        dao.write(name, createLockedBoard());
+            dao.write(name, createLockedBoard());
 
-        connection.createStatement().executeUpdate("DELETE FROM SudokuBoardDB WHERE name = '" + name + "'");
+            connection.createStatement().executeUpdate("DELETE FROM SudokuBoardDB WHERE name = '" + name + "'");
 
-        Assertions.assertDoesNotThrow(() -> dao.write(name, createLockedBoard()));
+            Assertions.assertDoesNotThrow(() -> dao.write(name, createLockedBoard()));
+        }
+
     }
 
     @Test
