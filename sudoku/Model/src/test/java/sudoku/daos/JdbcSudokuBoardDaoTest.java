@@ -45,6 +45,8 @@ public class JdbcSudokuBoardDaoTest {
     }
 
     private LockedFieldsSudokuBoardDecorator createLockedBoard() {
+
+        //USE FACTORY
         SudokuSolver solver = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(solver);
         board.solveGame();

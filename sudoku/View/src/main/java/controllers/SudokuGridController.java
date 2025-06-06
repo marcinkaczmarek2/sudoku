@@ -379,7 +379,7 @@ public class SudokuGridController {
 
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(name -> {
-            try {
+            try { //podmienic na try with resources
                 daoDB.write(name, new LockedFieldsSudokuBoardDecorator(board, saveLockedFields()));
                 showAlert("alert.save.success.title", "alert.save.success.message");
             } catch (DaoException e) {
