@@ -290,7 +290,7 @@ public class SudokuGridController {
 
     private void reloadUI() {
         Stage stage = (Stage) container.getScene().getWindow();
-        stage.setTitle(LangManager.resources.getString("title.difficulty.menu"));
+        stage.setTitle(LangManager.resources.getString("window.title.sudoku_game"));
         menuFile.setText(LangManager.resources.getString("menu.file"));
         menuLanguage.setText(LangManager.resources.getString("menu.language"));
         menuSave.setText(LangManager.resources.getString("menu.save"));
