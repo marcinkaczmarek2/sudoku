@@ -92,9 +92,9 @@ public class DifficultyMenuController {
 
             double size = 500;
             stage.setMinWidth(size);
-            stage.setMinHeight(size);
+            stage.setMinHeight(size + 100);
             stage.setWidth(size);
-            stage.setHeight(size);
+            stage.setHeight(size + 100);
 
         } catch (IOException e) {
             logger.error("Error while setting stage to SudokuGrid");

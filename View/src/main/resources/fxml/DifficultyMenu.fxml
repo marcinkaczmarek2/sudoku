@@ -68,8 +68,4 @@
       </VBox>
    </StackPane>
 
-   <HBox alignment="CENTER" spacing="10" padding="10">
-      <Button fx:id="checkBoardButton" text="%button.check_board" onAction="#handleCheckBoard"/>
-   </HBox>
-
 </VBox>

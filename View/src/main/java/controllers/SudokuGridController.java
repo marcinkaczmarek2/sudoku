@@ -468,7 +468,6 @@ public class SudokuGridController {
         else {
             showAlert("alert.lose.title", "alert.lose.message");
         }
-        //TODO add transition to sudokudiffmenu
     }
 
 }
