@@ -36,6 +36,9 @@ public class SudokuGridController {
     private StackPane container;
 
     @FXML
+    private Button checkBoardButton;
+
+    @FXML
     private GridPane sudokuGrid;
 
     @FXML
@@ -300,6 +303,7 @@ public class SudokuGridController {
         menuDbFile.setText(LangManager.resources.getString("menu.database"));
         menuDbLoad.setText(LangManager.resources.getString("menu.load"));
         menuDbSave.setText(LangManager.resources.getString("menu.save"));
+        checkBoardButton.setText(LangManager.resources.getString("button.check_board"));
     }
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")
@@ -455,5 +459,16 @@ public class SudokuGridController {
         alert.showAndWait();
     }
 
+    @SuppressWarnings("PMD.UnusedPrivateMethod")
+    @FXML
+    private void handleCheckBoard(){
+        if(board.checkBoard()){
+            showAlert("alert.win.title", "alert.win.message");
+        }
+        else {
+            showAlert("alert.lose.title", "alert.lose.message");
+        }
+        //TODO add transition to sudokudiffmenu
+    }
 
 }
