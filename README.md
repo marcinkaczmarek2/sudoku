@@ -1,16 +1,18 @@
-# Sudoku game application (Java)
+# 🧩 Sudoku Game Application (Java / JavaFX)
 
-This is a javafx application for playing sudoku, created as a university project to practice object-oriented programming in Java.
+A modern **JavaFX** application for playing Sudoku, created as a university project to practice **object-oriented programming** and component-based design.
 
-Players can play the game in 3 difficulty modes (easy, normal, hard). The available languages are English and Polish. There is an option to save and load games both locally and from/to database (PostgreSQL).
+The game supports **three difficulty levels**: Easy, Normal, and Hard.  
+Available in **two languages**: English 🇬🇧 and Polish 🇵🇱.  
+Players can **save and load games** both **locally** and from a **PostgreSQL** database.
 
->  Created as part of the Component Programming course at Lodz University of Technology (2025).
+> 🎓 Created as part of the *Component Programming* course at **Lodz University of Technology** (2025)
 
 ---
 
-## 📸 Screenshots
+## 🖼️ Screenshots
 
-Below are screenshots showcasing key functionalities of the application:
+Here are some screenshots showcasing the core features and interface:
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/df2f05a0-effa-4d71-86fc-43f69a4ada78" width="400"/>
@@ -27,47 +29,92 @@ Below are screenshots showcasing key functionalities of the application:
   <img src="https://github.com/user-attachments/assets/2e68e4b8-efdb-4bb5-bde6-50bf99319b24" width="400"/>
 </p>
 
-
-
-
 ---
 
 ## ⚙️ Installation
 
-To run this application, follow these steps:
+To run this application locally, follow these steps:
 
-1. Install \([Java-Development-Kit](https://www.oracle.com/java/technologies/downloads/)) - version at least 23.02v.
+1. Install [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) – version **17+** recommended (at least 23.02v).
+2. Install [Apache Maven](https://maven.apache.org/download.cgi) – version **3.9.9+**.
+3. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and **ensure it is running**.
+4. Clone the repository using Git:
 
-2. Install \([Apache Maven](https://maven.apache.org/download.cgi/)) - version at least 3.9.9v.
-
-3. Install \([Docker Desktop](https://www.docker.com/products/docker-desktop/)) and run it.
-
-4. Using git bash or windows terminal clone the project:
+   ```bash
    git clone https://github.com/marcinkaczmarek2/sudoku.git
-5. Enter the project and run the database server:
    cd sudoku
+   ```
+
+5. Start the database server via Docker:
+
+   ```bash
    docker-compose up -d --build
-6. Install dependencies:
+   ```
+
+6. Install all dependencies:
+
+   ```bash
    mvn clean install
-7. Enter the view sub-project:
+   ```
+
+7. Navigate to the JavaFX frontend project:
+
+   ```bash
    cd View
-8. Build and run the application:
+   ```
+
+8. Run the application:
+
+   ```bash
    mvn javafx:run
-9. (OPTIONAL) Create the project report:
-	mvn test site
-	mvn site:stage
-10. (OPTIONAL) Open the project report (sudoku/target/site/index.html)
+   ```
 
-✅ Done!
-You can now test the application and explore its functionality.
+9. *(Optional)* Generate the project report:
 
+   ```bash
+   mvn test site
+   mvn site:stage
+   ```
 
-## 👷 Things to change
+10. *(Optional)* View the generated report:
 
--Add mode in which you have instant feedback about field correctnes
+    Open `sudoku/target/site/index.html` in your browser.
 
--Make the database load menu larger
+✅ **Done!** You can now play Sudoku and explore the full functionality.
 
--Make the check board button wider
+---
 
--Transition into difficulty menu after finished game
+## 💡 Features
+
+- 🎮 3 Difficulty levels: Easy, Normal, Hard  
+- 🌐 Multilingual support: English & Polish  
+- 💾 Save/load games locally and via PostgreSQL  
+- 🧠 Smart input with real-time number checking *(planned)*  
+- 🧱 Clear and intuitive JavaFX-based UI  
+- 🐘 Docker-powered PostgreSQL backend  
+
+---
+
+## 🔧 Planned Improvements
+
+- ✅ Add mode with instant feedback on field correctness  
+- ✅ Enlarge the database load menu for better usability  
+- ✅ Widen the “Check Board” button for better accessibility  
+- ✅ Add automatic transition to difficulty menu after finishing a game  
+
+---
+
+## 🛠️ Technologies Used
+
+- Java 17+  
+- JavaFX  
+- Apache Maven  
+- PostgreSQL  
+- Docker + Docker Compose  
+- JUnit, Surefire, Site Plugin
+
+---
+
+## 📄 License
+
+This project is intended for educational use only.
