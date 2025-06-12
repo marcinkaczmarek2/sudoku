@@ -113,8 +113,3 @@ To run this application locally, follow these steps:
 - Docker + Docker Compose  
 - JUnit, Surefire, Site Plugin
 
----
-
-## 📄 License
-
-This project is intended for educational use only.
