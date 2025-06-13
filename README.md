@@ -99,10 +99,11 @@ To run this application locally, follow these steps:
 
 ## 🔧 Planned Improvements
 
-- ✅ Add mode with instant feedback on field correctness  
-- ✅ Enlarge the database load menu for better usability  
-- ✅ Widen the “Check Board” button for better accessibility  
-- ✅ Add automatic transition to difficulty menu after finishing a game  
+- ✅ Add mode with instant feedback on field correctness   
+- ✅ Add "go back to difficulty menu" button
+- ✅ Add time counter
+- ✅ Add score system
+- ✅ Add leaderboards stored in database
 
 ---
 
