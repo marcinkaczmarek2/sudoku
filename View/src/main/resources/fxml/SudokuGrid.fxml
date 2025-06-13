@@ -158,6 +158,6 @@
         <padding>
             <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
-        <Button fx:id="checkBoardButton" prefHeight="70.0" prefWidth="180.0" styleClass="minimal-button" text="%button.check_board" onAction="#handleCheckBoard" />
+        <Button fx:id="checkBoardButton" prefHeight="100.0" prefWidth="200.0" styleClass="minimal-button" text="%button.check_board" onAction="#handleCheckBoard" />
     </HBox>
 </VBox>

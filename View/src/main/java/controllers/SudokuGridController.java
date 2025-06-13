@@ -2,8 +2,11 @@ package controllers;
 
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -11,16 +14,19 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import managers.LangManager;
+import org.apache.commons.lang3.builder.Diff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sudoku.daos.Dao;
 import sudoku.daos.DaoFactory;
 import sudoku.exceptions.DaoException;
 import sudoku.exceptions.GuiException;
+import sudoku.exceptions.SetStageException;
 import sudoku.models.LockedFieldsSudokuBoardDecorator;
 import sudoku.models.SudokuBoard;
 import sudoku.models.SudokuField;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
@@ -318,6 +324,9 @@ public class SudokuGridController {
         dialog.setHeaderText(LangManager.resources.getString("dialog.save.header"));
         dialog.setContentText(LangManager.resources.getString("dialog.save.content"));
 
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setMinWidth(400);
+
         dialog.showAndWait().ifPresent(fileName -> {
             if (!fileName.endsWith(".sudoku")) {
                 fileName += ".sudoku";
@@ -349,6 +358,10 @@ public class SudokuGridController {
             dialog.setTitle(LangManager.resources.getString("dialog.load.title"));
             dialog.setHeaderText(LangManager.resources.getString("dialog.db_load.header"));
             dialog.setContentText(LangManager.resources.getString("dialog.db_load.content"));
+
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setMinWidth(400);
+
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(name -> {
                 try {
@@ -381,6 +394,9 @@ public class SudokuGridController {
         dialog.setHeaderText(LangManager.resources.getString("dialog.db_save.header"));
         dialog.setContentText(LangManager.resources.getString("dialog.db_save.content"));
 
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setMinWidth(400);
+
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(name -> {
             try { //podmienic na try with resources
@@ -408,6 +424,9 @@ public class SudokuGridController {
             dialog.setTitle(LangManager.resources.getString("dialog.db_load.title"));
             dialog.setHeaderText(LangManager.resources.getString("dialog.db_load.header"));
             dialog.setContentText(LangManager.resources.getString("dialog.db_load.content"));
+
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.setMinWidth(400);
 
 
             Optional<String> result = dialog.showAndWait();
@@ -461,12 +480,32 @@ public class SudokuGridController {
 
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     @FXML
-    private void handleCheckBoard(){
+    private void handleCheckBoard(ActionEvent event){
         if(board.checkBoard()){
             showAlert("alert.win.title", "alert.win.message");
         }
         else {
             showAlert("alert.lose.title", "alert.lose.message");
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/fxml/DifficultyMenu.fxml"), LangManager.getBundle());
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.getScene().setRoot(root);
+            stage.setTitle(LangManager.resources.getString("title.difficulty.menu"));
+
+            double size = 500;
+            stage.setMinWidth(size);
+            stage.setMinHeight(size + 100);
+            stage.setWidth(size);
+            stage.setHeight(size + 100);
+
+        } catch (IOException e) {
+            logger.error("Error while setting stage to Difficulty Menu");
+            throw new SetStageException(LangManager.resources.getString("error.reading_boards"), e);
         }
     }
 
