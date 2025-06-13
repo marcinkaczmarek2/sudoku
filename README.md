@@ -12,7 +12,7 @@ Players can **save and load games** both **locally** and from a **PostgreSQL** d
 
 ## 🖼️ Screenshots
 
-Here are some screenshots showcasing the core features and interface:
+Here are some screenshots showcasing the core features, interface and site plugin report:
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/df2f05a0-effa-4d71-86fc-43f69a4ada78" width="400"/>
@@ -27,6 +27,8 @@ Here are some screenshots showcasing the core features and interface:
   <img src="https://github.com/user-attachments/assets/7f97a6c9-cff5-49bb-812c-f8cbd0179e8c" width="400"/>
   <img src="https://github.com/user-attachments/assets/81e57241-b201-4fb4-9d4e-deb188745efd" width="400"/>
   <img src="https://github.com/user-attachments/assets/2e68e4b8-efdb-4bb5-bde6-50bf99319b24" width="400"/>
+  <img src="https://github.com/user-attachments/assets/d20d829c-2d8f-4532-a500-44bd51a0077b" width="400"/>
+  <img src="https://github.com/user-attachments/assets/36af567f-2eb6-49fa-89fb-f9a3d62596b5" width="400"/>
 </p>
 
 ---
